@@ -15,7 +15,7 @@ GREEN = (0, 255, 0)
 # Basic parameters of the screen
 WIDTH, HEIGHT = 900, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Pong")
+pygame.display.set_caption("TelePong")
 
 clock = pygame.time.Clock()
 FPS = 30
