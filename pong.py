@@ -4,6 +4,7 @@ pygame.init()
 
 # Font that is used to render the text
 font20 = pygame.font.Font('freesansbold.ttf', 20)
+font21 = pygame.font.Font('freesansbold.ttf', 50)
 
 # RGB values of standard colors
 BLACK = (0, 0, 0)
@@ -23,13 +24,14 @@ FPS = 30
 
 class Striker:
 		# Take the initial position, dimensions, speed and color of the object
-	def __init__(self, posx, posy, width, height, speed, color):
+	def __init__(self, posx, posy, width, height, speed, color, name):
 		self.posx = posx
 		self.posy = posy
 		self.width = width
 		self.height = height
 		self.speed = speed
 		self.color = color
+		self.name = name
 		# Rect that is used to control the position and collision of the object
 		self.geekRect = pygame.Rect(posx, posy, width, height)
 		# Object that is blit on the screen
@@ -119,10 +121,11 @@ class Ball:
 
 def main():
 	running = True
+	show = True
 
 	# Defining the objects
-	geek1 = Striker(20, 0, 20, 120, 10, WHITE)
-	geek2 = Striker(WIDTH-30, 0, 20, 120, 10, WHITE)
+	geek1 = Striker(20, 0, 20, 120, 10, WHITE, "Player 1")
+	geek2 = Striker(WIDTH-30, 0, 20, 120, 10, WHITE, "Player 2")
 	ball = Ball(WIDTH//2, HEIGHT//2, 10, 10, WHITE)
 
 	listOfGeeks = [geek1, geek2]
@@ -130,7 +133,7 @@ def main():
 	# Initial parameters of the players
 	geek1Score, geek2Score = 0, 0
 	geek1YFac, geek2YFac = 0, 0
-
+	winner = Striker
 	while running:
 		screen.fill(BLACK)
 
@@ -170,6 +173,13 @@ def main():
 			geek1Score += 1
 		elif point == 1:
 			geek2Score += 1
+		
+		if geek1Score == 5:
+			winner = geek1
+			break
+		if geek2Score == 5:
+			winner = geek2
+			break
 
 		# Someone has scored
 		# a point and the ball is out of bounds.
@@ -189,8 +199,17 @@ def main():
 						geek2Score, WIDTH-100, 20, WHITE)
 
 		pygame.display.update()
-		clock.tick(FPS)	
+		clock.tick(FPS)
 
+	while show:
+		msg = font21.render("Ha ganado el jugador "+winner.name, 0, WHITE)
+		msg_rect = msg.get_rect(center=(WIDTH/2, HEIGHT/2))
+		screen.fill(GREEN)
+		screen.blit(msg, msg_rect)
+		pygame.display.update()
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				show = False 
 
 if __name__ == "__main__":
 	main()
