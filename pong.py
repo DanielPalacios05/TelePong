@@ -1,9 +1,10 @@
 import pygame
+import myPongProtocol
 
 pygame.init()
 
 # Font that is used to render the text
-font20 = pygame.font.Font('freesansbold.ttf', 20)
+font20 = pygame.font.SysFont('arial', 100)
 font21 = pygame.font.Font('freesansbold.ttf', 50)
 
 # RGB values of standard colors
@@ -54,8 +55,8 @@ class Striker:
 		# Updating the rect with the new values
 		self.playerRect = (self.posx, self.posy, self.width, self.height)
 
-	def displayScore(self, text, score, x, y, color):
-		text = font20.render(text+str(score), True, color)
+	def displayScore(self, score, x, y, color):
+		text = font20.render(str(score), True, color)
 		textRect = text.get_rect()
 		textRect.center = (x, y)
 
@@ -136,6 +137,8 @@ def main():
 	winner = Striker
 	while running:
 		screen.fill(BLACK)
+		for i in range(0, HEIGHT, HEIGHT//10):
+			pygame.draw.rect(screen, WHITE, (WIDTH//2 - 5, i, 6, HEIGHT//20))
 
 		# Event handling
 		for event in pygame.event.get():
@@ -192,10 +195,8 @@ def main():
 		ball.display()
 
 		# Displaying the scores of the players
-		player1.displayScore("Player_1 : ",
-						player1Score, 100, 20, WHITE)
-		player2.displayScore("Player_2 : ",
-						player2Score, WIDTH-100, 20, WHITE)
+		player1.displayScore(player1Score, 225, 50, WHITE)
+		player2.displayScore(player2Score, 675, 50, WHITE)
 
 		pygame.display.update()
 		clock.tick(FPS)
