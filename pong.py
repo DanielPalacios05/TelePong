@@ -125,9 +125,9 @@ def main():
 	show = True
 
 	# Defining the objects
-	player1 = Striker(20, 0, 20, 120, 10, WHITE, "Player 1")
-	player2 = Striker(WIDTH-30, 0, 20, 120, 10, WHITE, "Player 2")
-	ball = Ball(WIDTH//2, HEIGHT//2, 10, 10, WHITE)
+	player1 = Striker(20, 0, 15, 110, 10, WHITE, "Player 1")
+	player2 = Striker(WIDTH-30, 0, 15, 110, 10, WHITE, "Player 2")
+	ball = Ball(WIDTH//2, HEIGHT//2, 9, 7, WHITE)
 
 	listOfPlayers = [player1, player2]
 
@@ -183,6 +183,9 @@ def main():
 		if player2Score == 5:
 			winner = player2
 			break
+		
+		ball.speed += 0.002
+		print(ball.speed)
 
 		# Someone has scored a point and the ball is out of bounds.
 		# So, we reset it's position
