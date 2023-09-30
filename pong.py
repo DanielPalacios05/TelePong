@@ -1,4 +1,5 @@
 import pygame
+import time
 import myPongProtocol
 
 pygame.init()
@@ -64,6 +65,14 @@ class Striker:
 
 	def getRect(self):
 		return self.playerRect
+	
+	def reset(self):
+		if self.name == "Player 1":
+			self.posx = 20
+			self.posy = (HEIGHT//2)-70
+		elif self.name == "Player 2":
+			self.posx = WIDTH-30
+			self.posy = (HEIGHT//2)-70
 
 # Ball class
 
@@ -125,8 +134,8 @@ def main():
 	show = True
 
 	# Defining the objects
-	player1 = Striker(20, 0, 15, 110, 10, WHITE, "Player 1")
-	player2 = Striker(WIDTH-30, 0, 15, 110, 10, WHITE, "Player 2")
+	player1 = Striker(20, (HEIGHT//2)-70, 15, 110, 10, WHITE, "Player 1")
+	player2 = Striker(WIDTH-30, (HEIGHT//2)-70, 15, 110, 10, WHITE, "Player 2")
 	ball = Ball(WIDTH//2, HEIGHT//2, 9, 7, WHITE)
 
 	listOfPlayers = [player1, player2]
@@ -191,6 +200,9 @@ def main():
 		# So, we reset it's position
 		if point:
 			ball.reset()
+			player1.reset()
+			player2.reset()
+			time.sleep(1)
 
 		# Displaying the objects on the screen
 		player1.display()
