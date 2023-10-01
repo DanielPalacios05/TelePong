@@ -1,6 +1,5 @@
 import pygame
 import time
-import myPongProtocol
 
 pygame.init()
 
@@ -163,7 +162,7 @@ def main():
 				if event.key == pygame.K_s:
 					player1YFac = 1
 			if event.type == pygame.KEYUP:
-				if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+				if event.key == pygame.K_UP or event.key == pygame.K_DOWN:                               
 					player2YFac = 0
 				if event.key == pygame.K_w or event.key == pygame.K_s:
 					player1YFac = 0
