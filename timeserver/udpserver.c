@@ -68,10 +68,6 @@ int main(){
     fr:
 
 
-
-   
- 
-
     struct sockaddr_storage client_address;
 
     socklen_t client_len = sizeof(client_address);
@@ -82,15 +78,22 @@ int main(){
     int bytes_read = recvfrom(sock,read_data,1024,0,(struct sockaddr*) &client_address,&client_len);
 
 
-
     char address_buffer[100],port_buffer[100];
 
     getnameinfo((struct sockaddr*) &client_address,client_len,address_buffer,sizeof(address_buffer),port_buffer, sizeof(port_buffer),NI_NUMERICHOST | NI_NUMERICSERV);
 
     printf("%s %s said: %s \n",address_buffer,port_buffer,read_data);
 
+    sendto(sock, read_data, bytes_read, 0,
+                (struct sockaddr*)&client_address, client_len);
+
+
+
+
 
     memset(read_data, 0, sizeof(read_data));
+
+
 
     goto fr;
 

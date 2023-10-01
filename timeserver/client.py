@@ -11,5 +11,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         a = str.encode(input("say sum: "))
         s.sendto(a,(HOST,PORT))
 
+        receivedBytes = s.recvfrom(1024);
+        print(receivedBytes[0].decode())
+1
+
         
     
