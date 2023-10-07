@@ -35,6 +35,9 @@ def goDown(sockd,nickname):
     return sendString(sockd,f"{nickname} DOWN")
 
 
+def exit(sockd,id):
+
+    return sendString(sockd,f"EXIT {id}")
 
 def assignRoom(sockd, nickname):
     

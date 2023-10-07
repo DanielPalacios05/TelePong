@@ -1,16 +1,17 @@
 #include "../include/users.h"
-
 #include "utils.c"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <netdb.h>
-#define MAXUSERS 10
+#include "stack.c"
+#include "../include/consts.h"
+
 
 struct user{
     char nickname[10];
     struct sockaddr userSocket;
-    
+
 };
 
 struct users{
@@ -18,6 +19,10 @@ struct users{
     struct user user_list[MAXUSERS];
 
     int numUsers;
+
+    int amountAssigned;
+
+    st freeIdStack[MAXUSERS];
 
 };
 
@@ -37,9 +42,24 @@ void printAllUsers(struct users *userList){
 
     printf("User list of %d: \n",userList->numUsers);
 
-    for (int i = 0; i < userList->numUsers; i++)
+    for (int i = 0; i < userList->amountAssigned; i++)
     {
-        printUser(&((userList->user_list)[i]));
+        int isbusy = 1;
+        for (int j = 0; j < userList->freeIdStack->count; j++){
+            
+            if(i == userList->freeIdStack->items[j]){
+                isbusy=0;
+                break;
+            }
+            
+        }
+
+        if(isbusy){
+            printUser(&((userList->user_list)[i]));
+        }
+
+        
+        
     }
     
 
@@ -47,9 +67,23 @@ void printAllUsers(struct users *userList){
 
 int add_user(struct user new_user, struct users *userList){
 
-    userList->user_list[userList->numUsers] = new_user;
+    int newId;
 
-    userList->numUsers += 1;
+    if(stackIsempty(userList->freeIdStack)){
+        newId=userList->numUsers;
+        userList->amountAssigned++;
+    }else{
+        pop(userList->freeIdStack,&newId);
+        
+    }
+
+    userList->user_list[newId] = new_user;
+
+    printf("user %s id %d\n\n",new_user.nickname,newId);
+
+
+    userList->numUsers++;
+    
 
     return 0;
 
@@ -59,15 +93,11 @@ int add_user(struct user new_user, struct users *userList){
 //be careful, array is left empty
 int delete_user(struct users *userList,int id){
 
-      /* Copy next element value to current element */
-        for(int i=id-1; i<userList->numUsers-1; i++)
-        {
-             userList->user_list[i] =  userList->user_list[i + 1];
-        }
+    push(userList->freeIdStack,id);
 
-        /* Decrement array size by 1 */
-         userList->numUsers--;
-    4
+    printStack(userList->freeIdStack);
+
+    userList->numUsers--;
 
     return 0;
 

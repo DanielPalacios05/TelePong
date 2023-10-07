@@ -4,62 +4,100 @@
 #include <stdio.h>
 #include "ddetp.c"
 #include "string.h"
+#include "rooms.c"
 struct users userList;
-char read_data[1024];
-struct sockaddr clientAddress;
+struct room rooms[1];
 
-void handle_request(char *read_data,int bytesResponse,struct sockaddr *clientAddress){
 
-    char* copyString = (char*)malloc(sizeof(read_data));
-    strcpy(copyString,read_data);
+void handle_request(int sock,struct request *req){
+    
+    char copyString[REQUESTSIZE];
+    strcpy(copyString,(req->body));
+    //printf("data from %s: %s\n",&req,copyString);
 
     char *ptr = strtok(copyString," ");
+
+    printf("%s\n",ptr);
+
 
 
     
     if(strcmp(ptr,"SETNICK")== 0){
-        printf("%s\n",ptr);
+        //printf("%s\n",ptr);
 
         //va a crear un usuario
+        struct user new_user;
 
         char *ptr = strtok(NULL," ");
 
-        struct user new_user;
-
         strcpy(new_user.nickname,ptr);
 
-        new_user.userSocket = *clientAddress;
+        
+
+        new_user.userSocket = req->clientAddress.addressSock;
 
         add_user(new_user,&userList);
 
         printAllUsers(&userList);
-
         ptr = strtok(NULL, " ");
-    }else if (strcmp(read_data,"B") == 0){
+    }else if (strcmp(ptr,"EXIT") == 0){
+
+        char *ptr = strtok(NULL," ");
+        int newId = atoi(ptr);
+
+        delete_user(&userList,newId);
+
+         printAllUsers(&userList);
+
+        sendResponseToUser(&userList.user_list[userList.numUsers],sock,strcat("0",(char*) userList.numUsers));
+
+
         
-    }else
-    {
-        printf("No se entiende%s\n",read_data);
+           
+    }else if (strcmp(ptr,"ASSIGN") == 0){
+
+        char *ptr = strtok(NULL," ");
+        int newId = atoi(ptr);
+
+        if(rooms[0].numPlayers == 0){
+
+            sendResponseToUser(&userList.user_list[0],sock,"0 0 WAIT");
+            
+
+        }
+
+
+
+
+
+        
+           
     }
+
+    {
+        printf("No se entiende%s\n",req->body);
+    }
+    deallocateRequest(req);
+
+
     
 }
 
 int main(){
 
 
-    struct user myUser;
+    createEmptyStack(userList.freeIdStack);
 
     int sock = initialize_socket();
 
 
     while (1)
     {
-        int bytes_read = listenForRequests(sock,read_data,&clientAddress);
+        struct request *incomingRequest = listenForRequests(sock);
 
-        if(bytes_read > 0){
-
+        if(incomingRequest->bytesAmount > 0){
         
-            handle_request(read_data,bytes_read,&clientAddress);
+            handle_request(sock,incomingRequest);
         }
     }
     
