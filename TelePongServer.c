@@ -9,27 +9,26 @@
 #include <string.h>
 #include <time.h>
 #include "myPongProtocol.c"
-
-#define MAX_PLAYERS 20
-
-struct Player {
-    struct sockaddr_storage address;
-    socklen_t address_len;
-    int playerNum;
-    int playerPos;
-};
-
-struct Game {
-    char gameId;
-    int gamePos;
-    struct Player player1;
-    struct Player player2;
-    int p1Score;
-    int p2Score;
-};
+#include "constants.h"
 
 int main() {
-    
+
+    struct Player {
+        struct sockaddr_storage address;
+        socklen_t address_len;
+        int playerNum;
+        int playerPos;
+    };
+
+    struct Game {
+        char gameId;
+        int gamePos;
+        struct Player player1;
+        struct Player player2;
+        int p1Score;
+        int p2Score;
+    };
+
     int server_socket = createServerSocket();
 
     printf("Waiting for players to connect...\n");
@@ -42,7 +41,7 @@ int main() {
 
     struct sockaddr_storage client_address;
     socklen_t client_len = sizeof(client_address);
-    char read_data[1024];
+    char read_data[BUFFER_SIZE];
 
     int bytes_read = recvfrom(server_socket, read_data, sizeof(read_data), 0, (struct sockaddr*)&client_address, &client_len);
 
