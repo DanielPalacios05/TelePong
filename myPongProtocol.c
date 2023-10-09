@@ -13,7 +13,7 @@ int createClientSocket(){
     struct sockaddr_in server_address;
 
     // Crear un socket
-    if ((client_socket = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    if ((client_socket = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
         perror("Error al crear el socket");
         exit(EXIT_FAILURE);
     }
@@ -21,39 +21,26 @@ int createClientSocket(){
 }
 
 int createServerSocket(){
-    int server_socket; 
-    struct sockaddr_in servaddr;  
-    // socket create and verification
-    server_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_socket == -1) {
-        printf("socket creation failed...\n");
-        exit(0);
-    }
-    else
-        printf("Socket successfully created..\n");
+    int server_socket = socket(AF_INET, SOCK_DGRAM, 0);
 
-    bzero(&servaddr, sizeof(servaddr));
-   
-    // assign IP, PORT
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(50000);
-   
-    // Binding newly created socket to given IP and verification
-    if ((bind(server_socket, (struct sockaddr*)&servaddr, sizeof(servaddr))) != 0) {
-        printf("socket bind failed...\n");
-        exit(0);
+    if (server_socket == -1) {
+        perror("Error al crear el socket");
+        
     }
-    else
-        printf("Socket successfully binded..\n");
-    
-    // Now server is ready to listen and verification
-    if ((listen(server_socket, 5)) != 0) {
-        printf("Listen failed...\n");
-        exit(0);
+
+    // Configurar la dirección y el puerto en los que se escucharán los datagramas
+    struct sockaddr_in server_address;
+    memset(&server_address, 0, sizeof(server_address));
+    server_address.sin_family = AF_INET;
+    server_address.sin_port = htons(8080); // Puerto deseado
+    server_address.sin_addr.s_addr = INADDR_ANY; // Escuchar en todas las interfaces
+
+    // Vincular el socket a la dirección y puerto
+    if (bind(server_socket, (struct sockaddr*)&server_address, sizeof(server_address)) == -1) {
+        perror("Error al vincular el socket");
+        close(server_socket);
+        
     }
-    else
-        printf("Server listening..\n");
 
     return server_socket;
 }
