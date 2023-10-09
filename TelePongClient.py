@@ -1,6 +1,6 @@
 import pygame
 import time
-import client
+import myPongProtocol
 
 pygame.init()
 
@@ -145,7 +145,7 @@ def main():
     player1Score, player2Score = 0, 0
     player1YFac, player2YFac = 0, 0
     winner = Striker
-    client_socket = client.createSocket()
+    client_socket = myPongProtocol.createSocket()
     print(client_socket)
     while running:
         screen.fill(BLACK)
@@ -189,7 +189,7 @@ def main():
             #player2YFac = 1
             movement = "DOWN"
         
-        pnumber, oponent = client.sendMovement(client_socket,movement)
+        pnumber, oponent = myPongProtocol.sendMovement(client_socket,movement)
         print("oponent: "+str(oponent))
         if pnumber == 1:
             if movement == "UP":
