@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <pthread.h>
+#include "constants.h"
 
 int createClientSocket(){
     int client_socket;
@@ -25,41 +26,20 @@ int createServerSocket(){
 
     if (server_socket == -1) {
         perror("Error al crear el socket");
-        
     }
 
     // Configurar la dirección y el puerto en los que se escucharán los datagramas
     struct sockaddr_in server_address;
     memset(&server_address, 0, sizeof(server_address));
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(8080); // Puerto deseado
+    server_address.sin_port = htons(PORT); // Puerto deseado
     server_address.sin_addr.s_addr = INADDR_ANY; // Escuchar en todas las interfaces
 
     // Vincular el socket a la dirección y puerto
     if (bind(server_socket, (struct sockaddr*)&server_address, sizeof(server_address)) == -1) {
         perror("Error al vincular el socket");
-        close(server_socket);
-        
+        close(server_socket); 
     }
 
     return server_socket;
-}
-
-int acceptNewClients(int server_socket){
-    int new_socket, len;
-    struct sockaddr_in cli;
-    
-    len = sizeof(cli);
-   
-    // Accept the data packet from client and verification
-    new_socket = accept(server_socket, (struct sockaddr *)&cli, &len);
-    if (new_socket < 0) {
-        printf("server accept failed...\n");
-        exit(0);
-    }
-    else
-        printf("server accept the client...\n");
-    
-
-    return new_socket;
 }
