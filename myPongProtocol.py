@@ -16,12 +16,20 @@ def createPlayer(nickname):
     client_socket.sendto(f_nickname,(HOST,PORT))
 
     player_number_bytes, _ = client_socket.recvfrom(1)
-    game_id_bytes, _ = client_socket.recvfrom(1)
+    game_id_bytes, _ = client_socket.recvfrom(15)
 
     playerNum = int.from_bytes(player_number_bytes, byteorder='big', signed=False)
     gameId = int.from_bytes(game_id_bytes, byteorder='big', signed=False)
 
-    return playerNum, gameId
+    return playerNum, gameId, client_socket
+
+def receiveOpponent(client_socket):
+
+    opponent_nickname_bytes, _ = client_socket.recvfrom(15)
+    opponent_nickname = opponent_nickname_bytes.decode('utf-8')
+    opponent_nickname = opponent_nickname.replace("\0", "")
+
+    return opponent_nickname
 
 def sendMovement(client_socket, movement):
     a = str.encode(movement)
