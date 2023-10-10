@@ -8,15 +8,17 @@ struct Player {
     char nickname[15];
     int playerNum;
     int playerPos;
+    int gameId;
 };
 
 struct Game {
-    char gameId;
+    int gameId;
     int gamePos;
     struct Player player1;
     struct Player player2;
     int p1Score;
     int p2Score;
+    int totalNumPlayers;
 };
 
 #define MAX_PLAYERS 20
