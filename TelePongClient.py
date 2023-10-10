@@ -5,8 +5,9 @@ import myPongProtocol
 pygame.init()
 
 # Font that is used to render the text
-font20 = pygame.font.SysFont('arial', 100)
-font21 = pygame.font.Font('freesansbold.ttf', 50)
+font20 = pygame.font.Font('fonts/256_bytes.ttf', 90)
+font21 = pygame.font.Font('fonts/256_bytes.ttf', 50)
+font22 = pygame.font.Font('fonts/256_bytes.ttf', 30)
 
 # RGB values of standard colors
 BLACK = (0, 0, 0)
@@ -58,6 +59,13 @@ class Striker:
 
     def displayScore(self, score, x, y, color):
         text = font20.render(str(score), True, color)
+        textRect = text.get_rect()
+        textRect.center = (x, y)
+
+        screen.blit(text, textRect)
+
+    def displayNickname(self, nickname, x, y, color):
+        text = font22.render(nickname, True, color)
         textRect = text.get_rect()
         textRect.center = (x, y)
 
@@ -134,9 +142,21 @@ def main():
     show = True
     movements = []
 
+    nickname = input()
+    oppNickname = " "
+
+    playerNumber, gameId, client_socket = myPongProtocol.createPlayer(nickname)
+    while len(oppNickname) == 1:
+        oppNickname = myPongProtocol.receiveOpponent(client_socket)
+    
     # Defining the objects
-    player1 = Striker(20, (HEIGHT//2)-70, 15, 110, 10, WHITE, "Player 1")
-    player2 = Striker(WIDTH-30, (HEIGHT//2)-70, 15, 110, 10, WHITE, "Player 2")
+    if playerNumber == 1:
+        player1 = Striker(20, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
+        player2 = Striker(WIDTH-30, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
+    else:
+        player1 = Striker(20, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
+        player2 = Striker(WIDTH-30, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
+        
     ball = Ball(WIDTH//2, HEIGHT//2, 9, 1, WHITE)
 
     listOfPlayers = [player1, player2]
@@ -145,10 +165,6 @@ def main():
     player1Score, player2Score = 0, 0
     player1YFac, player2YFac = 0, 0
     winner = Striker
-
-    nickname = "Esteban"
-
-    playerNumber, gameId = myPongProtocol.createPlayer(nickname)
 
     while running:
         screen.fill(BLACK)
@@ -192,8 +208,10 @@ def main():
             #player2YFac = 1
             movement = "DOWN"
         
-        pnumber, oponent = myPongProtocol.sendMovement(client_socket,movement)
-        print("oponent: "+str(oponent))
+        '''pnumber, oponent = myPongProtocol.sendMovement(client_socket,movement)'''
+        oponent = "NONE"
+        print("oponent: "+str(oppNickname))
+        print(len(oppNickname))
         if playerNumber == 1:
             if movement == "UP":
                 player1YFac = -1
@@ -266,8 +284,10 @@ def main():
         ball.display()
 
         # Displaying the scores of the players
-        player1.displayScore(player1Score, 225, 50, WHITE)
-        player2.displayScore(player2Score, 675, 50, WHITE)
+        player1.displayScore(player1Score, 225, 55, WHITE)
+        player1.displayNickname(nickname, 225, 550, WHITE)
+        player2.displayScore(player2Score, 675, 55, WHITE)
+        player2.displayNickname(oppNickname, 675, 550, WHITE)
 
         pygame.display.update()
         clock.tick(FPS)
