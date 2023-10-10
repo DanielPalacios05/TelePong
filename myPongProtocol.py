@@ -4,11 +4,20 @@ import socket
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 8080  # The port used by the server
-def createSocket():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    #s.bind((HOST,PORT))
-    return s
 
+def createSocket():
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    return client_socket
+
+def createPlayer(nickname):
+    f_nickname = str.encode(nickname)
+    client_socket = createSocket()
+    client_socket.sendto(f_nickname,(HOST,PORT))
+
+    player_number_bytes, _ = client_socket.recvfrom(1)
+
+    return 
 
 def sendMovement(client_socket, movement):
     a = str.encode(movement)
