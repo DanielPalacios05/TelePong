@@ -72,3 +72,7 @@ void sendGameInfo(int server_socket, struct Player player){
     sendto(server_socket, &player.playerNum, sizeof(player.playerNum), 0, (struct sockaddr*)&player.address, player.address_len);
     sendto(server_socket, &player.gameId, sizeof(player.gameId), 0, (struct sockaddr*)&player.address, player.address_len);
 }
+
+void sendOpponent(int server_socket, char *nickname, struct Player player){
+    sendto(server_socket, nickname, strlen(nickname) + 1, 0, (struct sockaddr*)&player.address, player.address_len);
+}
