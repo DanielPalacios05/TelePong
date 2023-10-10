@@ -3,8 +3,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#define PORT "8080"
 #define REQUESTSIZE 1024
+
+
 
 
 struct address
@@ -39,7 +40,7 @@ void deallocateRequest(struct request *req){
 
 
 
-int initialize_socket(){
+int initialize_socket(char *PORT){
     struct addrinfo hints;
 
     memset(&hints,0,sizeof(hints));

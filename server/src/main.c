@@ -6,9 +6,15 @@
 #include "string.h"
 #include "logger.c"
 #include "rooms.c"
+
+char* PORT;
+
 struct users userList;
 struct room rooms[1];
 Logger logger;
+
+
+
 
 
 void handle_request(int sock,struct request *req){
@@ -89,29 +95,42 @@ void handle_request(int sock,struct request *req){
     
 }
 
-int main(){
+int main(int argc, char* argv[]){
 
-    //InitializeLogger
+    if(argc > 3){
+        fprintf(stderr, "Too many arguments\n");
+        exit(1);
+    }
+
+
+    //Initialize PORT AND Logger
+    PORT = argv[1];
     logger.printEnabled = 1;
     logger.logfile = NULL;
     logger.filename = NULL;
 
-    setFile(&logger, "log.log");
+    setFile(&logger, argv[2]);
 
-    logToFile(logger, "Logging to file");
+    char *message = concat("Logging to file: ",logger.filename);
 
+
+    logToFile(logger,message);
+
+    free(message);
     
 
 
     createEmptyStack(userList.freeIdStack);
 
-    int sock = initialize_socket();
+    int sock = initialize_socket(PORT);
 
 
     while (1)
     {
-        logToFile(logger,"Server initiated at: ");
+        message = concat("Server listening to port: ",PORT);
+        logToFile(logger,message);
         struct request *incomingRequest = listenForRequests(sock);
+        free(message);
 
         if(incomingRequest->bytesAmount > 0){
         
