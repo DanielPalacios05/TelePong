@@ -20,27 +20,38 @@ int main() {
     struct Player players[MAX_PLAYERS];
     struct Game games[MAX_PLAYERS/2];
     int numPlayers = 0;
+    int gameId = 0;
 
     fr:
+    if (numPlayers < MAX_PLAYERS){
+        players[numPlayers] = receivePlayer(server_socket);
+        
 
-    players[0] = receivePlayer(server_socket);
+        for (int i = 0; i < (MAX_PLAYERS/2); i++) {
+            if(games[i].totalNumPlayers == 0){
+                players[numPlayers].playerNum = 1;
+                players[numPlayers].playerPos = numPlayers;
+                players[numPlayers].gameId = i+100;
+                games[i].gameId = i+100;
+                games[i].gamePos = i;
+                games[i].player1 = players[numPlayers];
+                games[i].totalNumPlayers++;
+                break;
+            }else if(games[i].totalNumPlayers == 1){
+                players[numPlayers].playerNum = 2;
+                players[numPlayers].playerPos = numPlayers;
+                players[numPlayers].gameId = i+100;
+                games[i].player2 = players[numPlayers];
+                games[i].totalNumPlayers++;
+                break;
+            }
+        }
 
-    if (playerIndex == -1 && numPlayers < MAX_PLAYERS) {
-        players[numPlayers].address = client_address;
-        players[numPlayers].address_len = client_len;
-        playerIndex = numPlayers;
+        sendGameInfo(server_socket, players[numPlayers]);
+        
+        printf("Player %s connected.\n", players[numPlayers].nickname);
         ++numPlayers;
+        
     }
-
-    // Send player number (1 or 2) to the client
-    char playerNumber = playerIndex + 1;
-    sendto(server_socket, &playerNumber, sizeof(playerNumber), 0, (struct sockaddr*)&players[playerIndex].address, players[playerIndex].address_len);
-
-    printf("Player %d connected.\n", playerIndex + 1);
-
-    // Forward the opponent's movement to the player
-    sendto(server_socket, read_data, bytes_read, 0, (struct sockaddr*)&players[1 - playerIndex].address, players[1 - playerIndex].address_len);
-
-    memset(read_data, 0, sizeof(read_data));
     goto fr;
 }
