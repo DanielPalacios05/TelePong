@@ -62,6 +62,13 @@ struct Player receivePlayer(int server_socket){
     // Asignar valores adecuados a player.playerNum y player.playerPos según tu lógica
     player.playerNum = 0; // Por ejemplo, aquí se inicializa en 0
     player.playerPos = 0; // Por ejemplo, aquí se inicializa en 0
+    player.gameId = 0;
 
+    memset(read_data, 0, sizeof(read_data));
     return player;
+}
+
+void sendGameInfo(int server_socket, struct Player player){
+    sendto(server_socket, &player.playerNum, sizeof(player.playerNum), 0, (struct sockaddr*)&player.address, player.address_len);
+    sendto(server_socket, &player.gameId, sizeof(player.gameId), 0, (struct sockaddr*)&player.address, player.address_len);
 }
