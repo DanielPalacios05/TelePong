@@ -17,7 +17,7 @@ def createPlayer(nickname):
 
     player_number_bytes, _ = client_socket.recvfrom(1)
 
-    return 
+    return None
 
 def sendMovement(client_socket, movement):
     a = str.encode(movement)
