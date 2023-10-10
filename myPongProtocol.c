@@ -43,3 +43,25 @@ int createServerSocket(){
 
     return server_socket;
 }
+
+struct Player receivePlayer(int server_socket){
+    struct sockaddr_storage client_address;
+    socklen_t client_len = sizeof(client_address);
+    char read_data[BUFFER_SIZE];
+
+    int bytes_read = recvfrom(server_socket, read_data, sizeof(read_data), 0, (struct sockaddr*)&client_address, &client_len);
+    struct Player player;
+    // Copiar los valores de client_address y client_len en player.address y player.address_len
+    memcpy(&player.address, &client_address, sizeof(client_address));
+    player.address_len = client_len;
+
+    // Copiar el nickname desde read_data a player.nickname
+    strncpy(player.nickname, read_data, sizeof(player.nickname) - 1);
+    player.nickname[sizeof(player.nickname) - 1] = '\0'; // Asegurarse de que la cadena esté terminada con '\0'
+
+    // Asignar valores adecuados a player.playerNum y player.playerPos según tu lógica
+    player.playerNum = 0; // Por ejemplo, aquí se inicializa en 0
+    player.playerPos = 0; // Por ejemplo, aquí se inicializa en 0
+
+    return player;
+}
