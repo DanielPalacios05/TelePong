@@ -4,9 +4,11 @@
 #include <stdio.h>
 #include "ddetp.c"
 #include "string.h"
+#include "logger.c"
 #include "rooms.c"
 struct users userList;
 struct room rooms[1];
+Logger logger;
 
 
 void handle_request(int sock,struct request *req){
@@ -47,9 +49,13 @@ void handle_request(int sock,struct request *req){
 
         delete_user(&userList,newId);
 
-         printAllUsers(&userList);
+        printAllUsers(&userList);
+         
+        char numUsersStr[4];
 
-        sendResponseToUser(&userList.user_list[userList.numUsers],sock,strcat("0",(char*) userList.numUsers));
+        sprintf(numUsersStr,"%d",userList.numUsers);
+
+        sendResponseToUser(&userList.user_list[userList.numUsers],sock,strcat("0 ", numUsersStr));
 
 
         
@@ -85,6 +91,17 @@ void handle_request(int sock,struct request *req){
 
 int main(){
 
+    //InitializeLogger
+    logger.printEnabled = 1;
+    logger.logfile = NULL;
+    logger.filename = NULL;
+
+    setFile(&logger, "log.log");
+
+    logToFile(logger, "Logging to file");
+
+    
+
 
     createEmptyStack(userList.freeIdStack);
 
@@ -93,6 +110,7 @@ int main(){
 
     while (1)
     {
+        logToFile(logger,"Server initiated at: ");
         struct request *incomingRequest = listenForRequests(sock);
 
         if(incomingRequest->bytesAmount > 0){

@@ -62,7 +62,6 @@ int initialize_socket(){
         printf("problemas con el socket\n");
     }
 
-    printf("bind socket\n");
 
     if(bind(sock,networkInfo->ai_addr,networkInfo->ai_addrlen)){
         printf("binding failed\n");
