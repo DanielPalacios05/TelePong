@@ -194,7 +194,7 @@ def main():
         
         pnumber, oponent = myPongProtocol.sendMovement(client_socket,movement)
         print("oponent: "+str(oponent))
-        if pnumber == 1:
+        if playerNumber == 1:
             if movement == "UP":
                 player1YFac = -1
             elif movement == "DOWN":
