@@ -145,8 +145,11 @@ def main():
     player1Score, player2Score = 0, 0
     player1YFac, player2YFac = 0, 0
     winner = Striker
-    client_socket = myPongProtocol.createSocket()
-    print(client_socket)
+
+    nickname = "Esteban"
+
+    playerNumber, gameId = myPongProtocol.createPlayer(nickname)
+
     while running:
         screen.fill(BLACK)
         for i in range(0, HEIGHT, HEIGHT//10):
