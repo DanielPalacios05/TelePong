@@ -8,6 +8,7 @@ pygame.init()
 font20 = pygame.font.Font('fonts/256_bytes.ttf', 90)
 font21 = pygame.font.Font('fonts/256_bytes.ttf', 50)
 font22 = pygame.font.Font('fonts/256_bytes.ttf', 30)
+font23 = pygame.font.Font('fonts/256_bytes.ttf', 22)
 
 # RGB values of standard colors
 BLACK = (0, 0, 0)
@@ -153,11 +154,11 @@ def main():
     if playerNumber == 1:
         player1 = Striker(20, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
         player2 = Striker(WIDTH-30, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
-    else:
+    elif playerNumber == 2:
         player1 = Striker(20, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
         player2 = Striker(WIDTH-30, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
-        
-    ball = Ball(WIDTH//2, HEIGHT//2, 9, 1, WHITE)
+
+    ball = Ball(WIDTH//2, HEIGHT//2, 9, 2, WHITE)
 
     listOfPlayers = [player1, player2]
 
@@ -285,9 +286,9 @@ def main():
 
         # Displaying the scores of the players
         player1.displayScore(player1Score, 225, 55, WHITE)
-        player1.displayNickname(nickname, 225, 550, WHITE)
+        player1.displayNickname(player1.name, 225, 550, WHITE)
         player2.displayScore(player2Score, 675, 55, WHITE)
-        player2.displayNickname(oppNickname, 675, 550, WHITE)
+        player2.displayNickname(player2.name, 675, 550, WHITE)
 
         pygame.display.update()
         clock.tick(FPS)
