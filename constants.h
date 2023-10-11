@@ -25,4 +25,7 @@ struct Game {
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
+struct Player players[MAX_PLAYERS];
+struct Game games[MAX_PLAYERS/2];
+
 #endif  // CONSTANTS_H
