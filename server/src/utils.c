@@ -1,5 +1,7 @@
 #include <arpa/inet.h> // For inet_ntoa
 #include <netinet/in.h>
+#include <stdlib.h>
+#include <string.h>
 
 void get_in_addr(struct sockaddr *sa,char *addressBuffer)
 {
@@ -7,10 +9,6 @@ void get_in_addr(struct sockaddr *sa,char *addressBuffer)
     inet_ntop(AF_INET, &(ipv4->sin_addr), addressBuffer, INET_ADDRSTRLEN);
   
 }
-
-#include <stdlib.h>
-#include <string.h>
-
 char* concat(const char *s1, const char *s2)
 {
     char *result = malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator

@@ -19,9 +19,7 @@ struct request
 {
     int bytesAmount;
     char* body;
-    struct address clientAddress;
-    
-    
+    struct address clientAddress;   
 };
 
 

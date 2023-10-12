@@ -6,12 +6,22 @@
 #include "string.h"
 #include "logger.c"
 #include "rooms.c"
-
+#include <pthread.h>
 char* PORT;
 
 struct users userList;
 struct room rooms[1];
 Logger logger;
+
+struct requestArgs
+{
+    int sock;
+    struct request request;
+};
+
+
+
+
 
 
 
@@ -48,6 +58,8 @@ void handle_request(int sock,struct request *req){
 
         printAllUsers(&userList);
         ptr = strtok(NULL, " ");
+
+
     }else if (strcmp(ptr,"EXIT") == 0){
 
         char *ptr = strtok(NULL," ");
@@ -95,6 +107,16 @@ void handle_request(int sock,struct request *req){
     
 }
 
+void* threadBody(void* args){
+    struct requestArgs* requestArgs = ((struct requestArgs*)args);
+
+
+    handle_request(requestArgs->sock,&requestArgs->request);    
+
+
+    pthread_exit(NULL);
+}
+
 int main(int argc, char* argv[]){
 
     if(argc > 3){
@@ -117,36 +139,37 @@ int main(int argc, char* argv[]){
     logToFile(logger,message);
 
     free(message);
+
+
     
-
-
     createEmptyStack(userList.freeIdStack);
 
     int sock = initialize_socket(PORT);
 
+    message = concat("Server listening to port: ",PORT);
+    logToFile(logger,message);
+ 
+    free(message);
+
+
 
     while (1)
-    {
-        message = concat("Server listening to port: ",PORT);
-        logToFile(logger,message);
+    {  
         struct request *incomingRequest = listenForRequests(sock);
-        free(message);
-
         if(incomingRequest->bytesAmount > 0){
-        
+
+            struct requestArgs newRequest;
+
+            newRequest.request = *incomingRequest;
+            newRequest.sock = sock;
+
+            pthread_t tid;
+            pthread_create(&tid, NULL, threadBody, (void *)&newRequest);
             handle_request(sock,incomingRequest);
+        
         }
     }
     
-
-  
-
-
-
-
-
-
-
 
 
 
