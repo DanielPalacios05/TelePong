@@ -10,15 +10,13 @@
 #include "constants.h"
 
 
-char *convertInt2Char(int number){    
-    char *text[10];
-    int caracteres_escritos = snprintf(*text, sizeof(text), "%d", number);
+void convertInt2Char(int number, char* text, size_t text_size){    
+
+    int caracteres_escritos = snprintf(text, text_size, "%d", number);
 
     if (caracteres_escritos >= sizeof(text)) {
         fprintf(stderr, "Error: desbordamiento de búfer\n");
     }
-
-    return *text;
 }
 
 int main()
@@ -78,19 +76,20 @@ fr:
             }
         }
         
-        char numPlayerText[1];
-        strcpy(numPlayerText, convertInt2Char(players[numPlayers].playerNum));
+        char numPlayerText[2];
+        convertInt2Char(players[numPlayers].playerNum, numPlayerText, sizeof(numPlayerText));
+        printf(" Player num INT  %d", players[numPlayers].playerNum);
         char gameIdText[4];
-        strcpy(gameIdText, convertInt2Char(players[numPlayers].gameId));
-        message[0] = '\0';
+        convertInt2Char(players[numPlayers].gameId, gameIdText, sizeof(gameIdText));
         strcpy(message, "SERVER GAME_INFO ");
         strcat(message, server_socketStr);
         strcat(message, " ");
         strcat(message, numPlayerText);
+        printf(" Num player text %s\n",numPlayerText);
         strcat(message, " ");
         strcat(message, gameIdText);
         strcat(message, " ");
-        strcat(message, response.address);
+        strcat(message, response.player.addressText);
         printf("Mensaje =>>   %s   ",message);
 
         handleCommunication(message);
