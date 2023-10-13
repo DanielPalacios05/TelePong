@@ -88,10 +88,7 @@ void sendOpponent(int server_socket, char *nickname, struct Player player)
 
 
 
-
-char *sockaddrStorageToString(const struct sockaddr_storage *addr) {
-    static char buffer[300]; // Almacenar la dirección IP como cadena
-    buffer[0] = '\0'; // Inicializar el buffer como una cadena vacía
+void sockaddrStorageToString(const struct sockaddr_storage *addr, char* buffer) {
 
     if (addr->ss_family == AF_INET) {
         struct sockaddr_in *addr_in = (struct sockaddr_in *)addr;
@@ -103,28 +100,39 @@ char *sockaddrStorageToString(const struct sockaddr_storage *addr) {
     } else {
         snprintf(buffer, MAX_ADDR_LEN, "Dirección desconocida");
     }
-
-    return buffer;
 }
+
 
 
 
 char *socklen_tToCString(socklen_t *client_len) {
-    char *len_str[20]; // Declaración de una cadena para almacenar el valor convertido
+    char *len_str  = malloc(sizeof(char*)*20); // Declaración de una cadena para almacenar el valor convertido
     // Utiliza sprintf para convertir el valor de len a una cadena
-    sprintf(*len_str, "%lu", (unsigned long)client_len);
+    sprintf(len_str, "%lu", (unsigned long)client_len);
     // Maneja otros tipos de direcciones según sea necesario
-    return *len_str;
+    return len_str;
 }
 
 struct sockaddr_storage resolveAddress(char *token){
+
+    char* colon_position = strchr(token, ':');
+    if (colon_position == NULL) {
+        fprintf(stderr, "Error: Cadena no válida\n");
+    }
+
+    *colon_position = '\0'; // Reemplazar ':' por un carácter nulo
+
+    char* ip_str = token;
+    char* port_str = colon_position + 1;
+    printf("IP: %s - PORT: %s", ip_str, port_str);
+
     struct addrinfo *converted_address;
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC; // Puede ser AF_INET para IPv4 o AF_INET6 para IPv6
+    hints.ai_family = AF_INET; // Puede ser AF_INET para IPv4 o AF_INET6 para IPv6
     hints.ai_socktype = SOCK_DGRAM;
-
-    int err = getaddrinfo(token, PORT2, &hints, &converted_address);
+    printf("Antes del getaddr.... \n");
+    int err = getaddrinfo(ip_str, port_str, &hints, &converted_address);
 
     if (err != 0)
     {
@@ -145,6 +153,8 @@ struct sockaddr_storage resolveAddress(char *token){
     }
     return address;
 }
+
+
 
 
 struct Response handleCommunication(char *message)
@@ -174,11 +184,13 @@ struct Response handleCommunication(char *message)
             struct Response response;
             response.player = receivePlayer(socket);
             printf("Hemos recibido al jugador: %s\n", response.player.nickname);
-            char *addressString = sockaddrStorageToString(&response.player.address);
-            strncpy(response.address, addressString, sizeof(response.address));
-            printf("Sin error !!");
-            strncpy(response.client_len, socklen_tToCString(&response.player.address_len), sizeof(response.client_len));
+            sockaddrStorageToString(&response.player.address,response.address);
+            strncpy(response.player.addressText, response.address, sizeof(response.player.addressText));
+            printf("Sin error !!\n");
             
+            strncpy(response.client_len, socklen_tToCString(&response.player.address_len), sizeof(response.client_len));
+            strncpy(response.player.addressLenText, response.client_len, sizeof(response.player.addressLenText));
+
             return response;
         }
         else if (strcmp(token, "DELETE") == 0)
@@ -214,23 +226,19 @@ struct Response handleCommunication(char *message)
 
             token = strtok(NULL, " ");
             int playerNum = atoi(token);
+            printf(" Este es el número sacado %d    |||\n", playerNum);
 
             token = strtok(NULL, " ");
             int gameId = atoi(token);
 
             token = strtok(NULL, " ");
+            printf("Ha llegado hasta aca.... \n");
             
             struct sockaddr_storage address = resolveAddress(token);
-
+            printf("Ha llegado hasta aca 22.... \n");
             socklen_t address_len = sizeof(address);
 
             sendGameInfo(socket, playerNum, gameId, address, address_len);
-
-            struct Response response;
-            response.player = receivePlayer(socket);
-            printf("Hemos recibido al jugador: %s\n", response.player.nickname);
-            return response;
         }
     }
 }
-
