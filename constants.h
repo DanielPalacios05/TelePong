@@ -21,9 +21,20 @@ struct Game {
     int totalNumPlayers;
 };
 
+
+
 #define MAX_PLAYERS 20
 #define PORT 8080
+#define PORT2 "8080"
 #define BUFFER_SIZE 1024
+#define MAX_ADDR_LEN 100
+
+struct Response {
+    struct Player player;
+    int server_socket;
+    char address[200];
+    char client_len[100];
+};
 
 struct Player players[MAX_PLAYERS];
 struct Game games[MAX_PLAYERS/2];

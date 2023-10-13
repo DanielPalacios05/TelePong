@@ -18,7 +18,7 @@ GREEN = (0, 255, 0)
 # Basic parameters of the screen
 WIDTH, HEIGHT = 900, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("TelePong")
+pygame.display.set_caption("TelePong Party - Waiting for players")
 
 clock = pygame.time.Clock()
 FPS = 30
@@ -157,6 +157,8 @@ def main():
     elif playerNumber == 2:
         player1 = Striker(20, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
         player2 = Striker(WIDTH-30, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
+    
+    pygame.display.set_caption("TelePong Party - "+player1.name+" vs "+player2.name)
 
     ball = Ball(WIDTH//2, HEIGHT//2, 9, 2, WHITE)
 
