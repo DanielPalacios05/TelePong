@@ -89,15 +89,32 @@ fr:
         strcat(message, " ");
         strcat(message, gameIdText);
         strcat(message, " ");
-        strcat(message, response.player.addressText);
+        strcat(message, players[numPlayers].addressText);
         printf("Mensaje =>>   %s   ",message);
 
         handleCommunication(message);
         printf("Gamepos ... %d || ", gamePos);
         if (players[numPlayers].playerNum == 2)
-        {
-            sendOpponent(server_socket, games[gamePos].player2.nickname, games[gamePos].player1);
-            sendOpponent(server_socket, games[gamePos].player1.nickname, games[gamePos].player2);
+        {   
+            strcpy(message, "PLAYER SEND_OPP ");
+            strcat(message, server_socketStr);
+            strcat(message, " ");
+            strcat(message, games[gamePos].player2.nickname);
+            strcat(message, " ");
+            strcat(message, games[gamePos].player1.addressText);
+            printf("Mensaje =>>   %s   ",message);
+            handleCommunication(message);
+            //sendOpponent(server_socket, games[gamePos].player2.nickname, games[gamePos].player1);
+
+            strcpy(message, "PLAYER SEND_OPP ");
+            strcat(message, server_socketStr);
+            strcat(message, " ");
+            strcat(message, games[gamePos].player1.nickname);
+            strcat(message, " ");
+            strcat(message, games[gamePos].player2.addressText);
+            printf("Mensaje =>>   %s   ",message);
+            handleCommunication(message);
+            //sendOpponent(server_socket, games[gamePos].player1.nickname, games[gamePos].player2);
         }
 
         printf("Player %s connected.\n", players[numPlayers].nickname);
