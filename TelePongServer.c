@@ -6,18 +6,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include "utils.c"
 #include "myPongProtocol.c"
 #include "constants.h"
-
-
-void convertInt2Char(int number, char* text, size_t text_size){    
-
-    int caracteres_escritos = snprintf(text, text_size, "%d", number);
-
-    if (caracteres_escritos >= sizeof(text)) {
-        fprintf(stderr, "Error: desbordamiento de búfer\n");
-    }
-}
 
 int main()
 {
@@ -82,14 +73,7 @@ fr:
         char gameIdText[4];
         convertInt2Char(players[numPlayers].gameId, gameIdText, sizeof(gameIdText));
         strcpy(message, "SERVER GAME_INFO ");
-        strcat(message, server_socketStr);
-        strcat(message, " ");
-        strcat(message, numPlayerText);
-        printf(" Num player text %s\n",numPlayerText);
-        strcat(message, " ");
-        strcat(message, gameIdText);
-        strcat(message, " ");
-        strcat(message, players[numPlayers].addressText);
+        concat(message, 7, server_socketStr, " ", numPlayerText, " ", gameIdText, " ", players[numPlayers].addressText);
         printf("Mensaje =>>   %s   ",message);
 
         handleCommunication(message);
@@ -97,21 +81,13 @@ fr:
         if (players[numPlayers].playerNum == 2)
         {   
             strcpy(message, "PLAYER SEND_OPP ");
-            strcat(message, server_socketStr);
-            strcat(message, " ");
-            strcat(message, games[gamePos].player2.nickname);
-            strcat(message, " ");
-            strcat(message, games[gamePos].player1.addressText);
+            concat(message, 5, server_socketStr, " ", games[gamePos].player2.nickname, " ", games[gamePos].player1.addressText);
             printf("Mensaje =>>   %s   ",message);
             handleCommunication(message);
             //sendOpponent(server_socket, games[gamePos].player2.nickname, games[gamePos].player1);
 
             strcpy(message, "PLAYER SEND_OPP ");
-            strcat(message, server_socketStr);
-            strcat(message, " ");
-            strcat(message, games[gamePos].player1.nickname);
-            strcat(message, " ");
-            strcat(message, games[gamePos].player2.addressText);
+            concat(message, 5, server_socketStr, " ", games[gamePos].player1.nickname, " ", games[gamePos].player2.addressText);
             printf("Mensaje =>>   %s   ",message);
             handleCommunication(message);
             //sendOpponent(server_socket, games[gamePos].player1.nickname, games[gamePos].player2);
