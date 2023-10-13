@@ -40,9 +40,10 @@ int initialize_socket(char *PORT){
 
 
 
+
     struct addrinfo *networkInfo;
 
-    getaddrinfo(0,PORT,&hints,&networkInfo);
+    getaddrinfo(NULL,PORT,&hints,&networkInfo);
 
     int sock = socket(networkInfo->ai_family,networkInfo->ai_socktype,networkInfo->ai_protocol);
 
