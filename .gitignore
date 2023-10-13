@@ -59,6 +59,8 @@ __pycache__/
 # C extensions
 *.so
 
+launch.json
+
 # Distribution / packaging
 .Python
 build/
