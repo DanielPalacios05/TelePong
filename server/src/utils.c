@@ -2,6 +2,8 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
+#include <netdb.h>
+#include <stdarg.h>
 
 void get_in_addr(struct sockaddr *sa,char *addressBuffer)
 {
@@ -9,11 +11,12 @@ void get_in_addr(struct sockaddr *sa,char *addressBuffer)
     inet_ntop(AF_INET, &(ipv4->sin_addr), addressBuffer, INET_ADDRSTRLEN);
   
 }
-char* concat(const char *s1, const char *s2)
-{
-    char *result = malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
-    // in real code you would check for errors in malloc here
-    strcpy(result, s1);
-    strcat(result, s2);
-    return result;
+
+void concat(char * result, int num, ...) {
+  va_list args;
+  va_start(args, num);
+  for (int i = 0; i < num; i++) {
+    strcat(result, va_arg(args, char* ));
+  }
+  va_end(args);
 }

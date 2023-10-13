@@ -31,7 +31,7 @@ void logToFile(Logger logger, char* stringToLog) {
         strftime(timestamp, sizeof(timestamp), "[%F %H:%M:%S]", timeinfo);
 
 
-        fprintf(logger.logfile, "%s %s\n",timestamp, stringToLog);
+        fprintf(logger.logfile, "%s %s \n",timestamp, stringToLog);
 
         if(logger.printEnabled){
             printf("%s %s\n",timestamp, stringToLog);

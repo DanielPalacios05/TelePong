@@ -18,23 +18,12 @@ struct address
 struct request
 {
     int bytesAmount;
-    char* body;
+    char body[REQUESTSIZE];
     struct address clientAddress;   
 };
 
 
 
-void initializeRequest(struct request *req){
-
-    req->body = malloc(REQUESTSIZE);
-
-}
-
-void deallocateRequest(struct request *req){
-
-    free(req->body);
-    free(req);
-}
 
 
 
@@ -77,15 +66,14 @@ int initialize_socket(char *PORT){
 }
 
 
-struct request* listenForRequests(int sock){
+struct request listenForRequests(int sock){
 
-    struct request *actualRequest = malloc(sizeof(struct request));
-    initializeRequest(actualRequest);
+    struct request actualRequest;
     struct sockaddr_storage client_address;
-    actualRequest->clientAddress.client_len = sizeof(client_address);
+    actualRequest.clientAddress.client_len = sizeof(client_address);
   
-    int bytes_read = recvfrom(sock,actualRequest->body,REQUESTSIZE,0,&(actualRequest->clientAddress.addressSock),&(actualRequest->clientAddress.client_len));
-    actualRequest->bytesAmount=bytes_read;
+    int bytes_read = recvfrom(sock,actualRequest.body,REQUESTSIZE,0,&actualRequest.clientAddress.addressSock,&actualRequest.clientAddress.client_len);
+    actualRequest.bytesAmount=bytes_read;
     return actualRequest;
 }
 

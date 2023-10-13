@@ -32,8 +32,10 @@ void handle_request(int sock,struct request *req){
     char copyString[REQUESTSIZE];
     strcpy(copyString,(req->body));
     //printf("data from %s: %s\n",&req,copyString);
+    char *ptr;
+    char* tempPr = copyString;
 
-    char *ptr = strtok(copyString," ");
+    ptr = strtok_r(tempPr," ",&tempPr);
 
     printf("%s\n",ptr);
 
@@ -46,7 +48,7 @@ void handle_request(int sock,struct request *req){
         //va a crear un usuario
         struct user new_user;
 
-        char *ptr = strtok(NULL," ");
+        ptr = strtok_r(tempPr," ",&tempPr);
 
         strcpy(new_user.nickname,ptr);
 
@@ -57,12 +59,12 @@ void handle_request(int sock,struct request *req){
         add_user(new_user,&userList);
 
         printAllUsers(&userList);
-        ptr = strtok(NULL, " ");
+        ptr = strtok_r(tempPr," ",&tempPr);
 
 
     }else if (strcmp(ptr,"EXIT") == 0){
 
-        char *ptr = strtok(NULL," ");
+        ptr = strtok_r(tempPr," ",&tempPr);
         int newId = atoi(ptr);
 
         delete_user(&userList,newId);
@@ -80,7 +82,7 @@ void handle_request(int sock,struct request *req){
            
     }else if (strcmp(ptr,"ASSIGN") == 0){
 
-        char *ptr = strtok(NULL," ");
+        ptr = strtok_r(tempPr," ",&tempPr);
         int newId = atoi(ptr);
 
         if(rooms[0].numPlayers == 0){
@@ -88,30 +90,34 @@ void handle_request(int sock,struct request *req){
             sendResponseToUser(&userList.user_list[0],sock,"0 0 WAIT");
             
 
-        }
-
-
-
-
-
-        
-           
+        }            
     }
-
+    else
     {
         printf("No se entiende%s\n",req->body);
     }
-    deallocateRequest(req);
 
 
     
 }
 
 void* threadBody(void* args){
+
+    
     struct requestArgs* requestArgs = ((struct requestArgs*)args);
 
+    char addressBuffer[100];
+    char portBuffer[100];
+    getnameinfo(&requestArgs->request.clientAddress.addressSock,requestArgs->request.clientAddress.client_len,addressBuffer,sizeof(addressBuffer),portBuffer, sizeof(portBuffer),NI_NUMERICHOST | NI_NUMERICSERV);
 
-    handle_request(requestArgs->sock,&requestArgs->request);    
+    char logString[500];
+    concat(logString,5, &addressBuffer," ",&portBuffer,": ",requestArgs->request.body);    
+
+    logToFile(logger,logString);
+
+    handle_request(requestArgs->sock,&requestArgs->request);
+
+    free(requestArgs);
 
 
     pthread_exit(NULL);
@@ -133,41 +139,41 @@ int main(int argc, char* argv[]){
 
     setFile(&logger, argv[2]);
 
-    char *message = concat("Logging to file: ",logger.filename);
+    char message[500];
+    
+    concat(message,2,"Logging to file: ",logger.filename);
 
 
     logToFile(logger,message);
 
-    free(message);
-
+    memset(&message,0,sizeof(message));
 
     
     createEmptyStack(userList.freeIdStack);
 
     int sock = initialize_socket(PORT);
 
-    message = concat("Server listening to port: ",PORT);
+    concat(message,2,"Server listening to port: ",PORT);
     logToFile(logger,message);
  
-    free(message);
 
 
 
     while (1)
     {  
-        struct request *incomingRequest = listenForRequests(sock);
-        if(incomingRequest->bytesAmount > 0){
+        struct request incomingRequest = listenForRequests(sock);
+        if(incomingRequest.bytesAmount > 0){
 
-            struct requestArgs newRequest;
+            struct requestArgs *newRequest = malloc(sizeof(struct requestArgs));
 
-            newRequest.request = *incomingRequest;
-            newRequest.sock = sock;
+            newRequest->request = incomingRequest;
+            newRequest->sock = sock;
 
             pthread_t tid;
-            pthread_create(&tid, NULL, threadBody, (void *)&newRequest);
-            handle_request(sock,incomingRequest);
+            pthread_create(&tid, NULL, threadBody, (void *)newRequest);
         
         }
+        
     }
     
 
