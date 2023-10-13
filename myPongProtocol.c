@@ -81,9 +81,9 @@ void sendGameInfo(int server_socket, int playerNum, int gameId, struct sockaddr_
     sendto(server_socket, &gameId, sizeof(gameId), 0, (struct sockaddr *)&address, address_len);
 }
 
-void sendOpponent(int server_socket, char *nickname, struct Player player)
+void sendOpponent(int server_socket, char *nickname, struct sockaddr_storage address, socklen_t address_len)
 {
-    sendto(server_socket, nickname, strlen(nickname) + 1, 0, (struct sockaddr *)&player.address, player.address_len);
+    sendto(server_socket, nickname, strlen(nickname) + 1, 0, (struct sockaddr *)&address, address_len);
 }
 
 
@@ -193,16 +193,25 @@ struct Response handleCommunication(char *message)
 
             return response;
         }
-        else if (strcmp(token, "DELETE") == 0)
+        else if (strcmp(token, "SEND_OPP") == 0)
         {
-            printf("Hemos recibido el DELETE\n");
+            printf("Hemos recibido el SEND_OPP\n");
             token = strtok(NULL, " ");
-            char *juego = token;
-            printf("Hemos recibido al juego: %s\n", token);
+            int socket = atoi(token);
+
             token = strtok(NULL, " ");
-            char *jugador = token;
-            printf("Hemos recibido al jugador: %s\n", token);
-            printf("Hemos recibido al juego: %s, con el jugador: %s\n", juego, jugador);
+            char oppNickname[20];
+            strncpy(oppNickname, token, sizeof(oppNickname));
+            printf(" Este es el nombre sacado %s    |||\n", oppNickname);
+
+            token = strtok(NULL, " ");
+            printf("Ha llegado hasta aca.... \n");
+            
+            struct sockaddr_storage address = resolveAddress(token);
+            printf("Ha llegado hasta aca 22.... \n");
+            socklen_t address_len = sizeof(address);
+
+            sendOpponent(socket, oppNickname, address, address_len);
         }
     }
     else if (strcmp(token, "SERVER") == 0)
