@@ -9,6 +9,8 @@ struct Player {
     int playerNum;
     int playerPos;
     int gameId;
+    char addressText[200];
+    char addressLenText[100];
 };
 
 struct Game {
