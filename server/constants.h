@@ -5,6 +5,7 @@
 #define PORT2 "8080"
 #define BUFFER_SIZE 1024
 #define MAX_ADDR_LEN 100
+#include <sys/socket.h>
 
 struct Player {
     struct sockaddr_storage address;
