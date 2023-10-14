@@ -11,10 +11,16 @@
 #include "utils.c"
 
 
-void handle_request(int sock,struct request *req){
+void handle_request(char *sock, char *msg, struct Player player){
     
     char copyString[REQUESTSIZE];
-    strcpy(copyString,(req->body));
+
+    if (strcmp(msg, "UP") == 0 || strcmp(msg, "DOWN") == 0 || strcmp(msg, "NONE") == 0) {
+
+        char temp[200];
+        concat(temp, 6, "PLAYER SEND_MOVE ", msg, " ", sock, " ", player.addressText);
+        handleCommunication(temp);
+    }
     //printf("data from %s: %s\n",&req,copyString);
     char *ptr;
     char* tempPr = copyString;
@@ -32,40 +38,35 @@ void* threadBody(void* args){
     struct Response *response_ptr = (struct Response *)args;
     struct Response response;
     response = handleCommunication(response_ptr->msg);
+    
+    struct Player player;
+    char buffer[100];
 
-    char token[100];
-    strcpy(token, players[0].addressText);
-    char *colon_position = strchr(token, ':');
+    if(response.playerNum == 1){
+        strcpy(buffer, games[response.gameId-100].player1.addressText);
+        player = games[response.gameId-100].player2;
+    }else{
+        strcpy(buffer, games[response.gameId-100].player2.addressText);
+        player = games[response.gameId-100].player1;
+    }
+
+    char *colon_position = strchr(buffer, ':');
     *colon_position = '\0'; // Reemplazar ':' por un carácter nulo
 
-    char *ip_str = token;
+    char *ip_str = buffer;
     char *port_str = colon_position + 1;
 
 
     char logString[500];
-    //concat(logString,5, &addressBuffer," ",&portBuffer,": ",requestArgs->request.body);    
+    
+    concat(logString,5, ip_str," ",port_str,": ",response_ptr->msg);    
 
     //logToFile(logger,logString);
 
-    //handle_request(requestArgs->sock,&requestArgs->request);
-
-    //free(requestArgs);
+    handle_request(response_ptr->serverSocketStr, response.msg, player);
 
 
     pthread_exit(NULL);
-}
-
-
-
-void hola(){
-    char token[100];
-    strcpy(token, players[0].addressText);
-    char *colon_position = strchr(token, ':');
-    *colon_position = '\0'; // Reemplazar ':' por un carácter nulo
-
-    char *ip_str = token;
-    char *port_str = colon_position + 1;
-    printf("IP: %s - PORT: %s - NAME: %s\n", ip_str, port_str, players[0].nickname);
 }
 
 
@@ -107,8 +108,8 @@ fr:
 
             for (int i = 0; i < (MAX_PLAYERS / 2); i++)
             {
-                printf("Paso por for en %d || ", i);
-                printf("%d", games[i].totalNumPlayers);
+                //printf("Paso por for en %d || ", i);
+                //printf("%d", games[i].totalNumPlayers);
                 if (games[i].totalNumPlayers == 0)
                 {
                     players[numPlayers].playerNum = 1;
@@ -134,38 +135,36 @@ fr:
             
             char numPlayerText[2];
             convertInt2Char(players[numPlayers].playerNum, numPlayerText, sizeof(numPlayerText));
-            printf(" Player num INT  %d", players[numPlayers].playerNum);
+            //printf(" Player num INT  %d", players[numPlayers].playerNum);
             char gameIdText[4];
             convertInt2Char(players[numPlayers].gameId, gameIdText, sizeof(gameIdText));
             strcpy(message, "SERVER GAME_INFO ");
             concat(message, 7, server_socketStr, " ", numPlayerText, " ", gameIdText, " ", players[numPlayers].addressText);
-            printf("Mensaje =>>   %s   ",message);
+            //printf("Mensaje =>>   %s   ",message);
 
             handleCommunication(message);
-            printf("Gamepos ... %d || ", gamePos);
+            //printf("Gamepos ... %d || ", gamePos);
             if (players[numPlayers].playerNum == 2)
             {   
                 strcpy(message, "PLAYER SEND_OPP ");
                 concat(message, 5, server_socketStr, " ", games[gamePos].player2.nickname, " ", games[gamePos].player1.addressText);
-                printf("Mensaje =>>   %s   ",message);
+                //printf("Mensaje =>>   %s   ",message);
                 handleCommunication(message);
                 //sendOpponent(server_socket, games[gamePos].player2.nickname, games[gamePos].player1);
 
                 strcpy(message, "PLAYER SEND_OPP ");
                 concat(message, 5, server_socketStr, " ", games[gamePos].player1.nickname, " ", games[gamePos].player2.addressText);
-                printf("Mensaje =>>   %s   ",message);
+                //printf("Mensaje =>>   %s   ",message);
                 handleCommunication(message);
                 //sendOpponent(server_socket, games[gamePos].player1.nickname, games[gamePos].player2);
             }
 
             printf("Player %s connected.\n", players[numPlayers].nickname);
-            hola();
             
             ++numPlayers;
         }
     }else{
-
-        
+        printf("Entra al else...\n");
         strcpy(response.serverSocketStr, server_socketStr);
         struct Response *response_ptr = &response; // Obtén un puntero a la estructura
         pthread_t tid;

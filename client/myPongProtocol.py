@@ -15,7 +15,7 @@ def createPlayer(nickname, client_socket):
     client_socket.sendto(f_nickname,(HOST,PORT))
 
     player_number_bytes, _ = client_socket.recvfrom(1)
-    game_id_bytes, _ = client_socket.recvfrom(15)
+    game_id_bytes, _ = client_socket.recvfrom(1)
 
     playerNum = int.from_bytes(player_number_bytes, byteorder='big', signed=False)
     gameId = int.from_bytes(game_id_bytes, byteorder='big', signed=False)
@@ -35,23 +35,20 @@ def receiveOpponent(client_socket):
 
     return opponent_nickname
 
-def sendMovement(client_socket, movement):
-    a = str.encode(movement)
+def sendAndReceiveMovement(client_socket, msg):
+    a = str.encode(msg)
     #if movement != "NONE":
-    #    print("Sent " + movement + " to the server")
+    print("Sent " + msg + " to the server")
     client_socket.sendto(a,(HOST,PORT))
     
     # In the client code where you receive data from the server
-    player_number_bytes, _ = client_socket.recvfrom(1)
-    player_number = int.from_bytes(player_number_bytes, byteorder='big')
-    print("Received player number:", player_number)
+    opponent_move_bytes, _ = client_socket.recvfrom(4)
+    opponent_move = opponent_move_bytes.decode("utf-8")
+    print("Received player move:"+ opponent_move)
     # Now you can use the player_number variable in your game logic
-
-    receivedBytes = client_socket.recvfrom(1024)
-    receivedmovement = receivedBytes[0].decode()
     #if receivedmovement != "NONE":
     #    print("Received " + receivedmovement + " from the server")
-    return player_number, receivedmovement
+    return opponent_move
 
 #     return receiveddata
 

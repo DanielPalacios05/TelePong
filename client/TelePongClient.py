@@ -154,6 +154,7 @@ def main():
     #  y poder después hacer el envío de mensajes.
 
     playerNumber, gameId = myPongProtocol.createPlayer(nickname, client_socket)
+    print(gameId)
     while len(oppNickname) == 1:
         oppNickname = myPongProtocol.receiveOpponent(client_socket)
     
@@ -207,10 +208,10 @@ def main():
         
         if len(movements) <1:
             #player2YFac = 0
-            movement = ""
+            movement = "NONE"
         elif len(movements) > 1:
             #player2YFac = 0
-            movement = ""
+            movement = "NONE"
         elif movements[0] == "UP":
             #player2YFac = -1
             movement = "UP"
@@ -218,8 +219,12 @@ def main():
             #player2YFac = 1
             movement = "DOWN"
         
-        '''pnumber, oponent = myPongProtocol.sendMovement(client_socket,movement)'''
+        msg = "PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+movement
+        print(msg)
         oponent = "NONE"
+        oponent = myPongProtocol.sendAndReceiveMovement(client_socket, msg)
+        print("Oponente movió: "+oponent)
+        
         print("oponent: "+str(oppNickname))
         print(len(oppNickname))
         if playerNumber == 1:

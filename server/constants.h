@@ -31,6 +31,8 @@ struct Game {
 struct Response {
     struct Player player;
     int server_socket;
+    int gameId;
+    int playerNum;
     char serverSocketStr[100];
     char address[200];
     char client_len[100];
