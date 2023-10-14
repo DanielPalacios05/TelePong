@@ -145,8 +145,15 @@ def main():
 
     nickname = input()
     oppNickname = " "
+    
+    client_socket = myPongProtocol.createSocket()
 
-    playerNumber, gameId, client_socket = myPongProtocol.createPlayer(nickname)
+    myPongProtocol.sendMsg("SERVER INIT_PLAYER", client_socket)
+
+    # Se debe pedir por pantalla la IP y PORT del server para almacenarlos
+    #  y poder después hacer el envío de mensajes.
+
+    playerNumber, gameId = myPongProtocol.createPlayer(nickname, client_socket)
     while len(oppNickname) == 1:
         oppNickname = myPongProtocol.receiveOpponent(client_socket)
     
