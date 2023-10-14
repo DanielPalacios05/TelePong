@@ -2,7 +2,7 @@
 
 import socket
 
-HOST = "127.0.0.1"  # The server's hostname or IP address
+HOST = "35.172.191.163"  # The server's hostname or IP address
 PORT = 8080  # The port used by the server
 
 def createSocket():
@@ -11,7 +11,7 @@ def createSocket():
     return client_socket
 
 def createPlayer(nickname, client_socket):
-    f_nickname = str.encode(nickname)
+    f_nickname = str.encode(nickname+ "\0")
     client_socket.sendto(f_nickname,(HOST,PORT))
 
     player_number_bytes, _ = client_socket.recvfrom(1)
@@ -23,8 +23,8 @@ def createPlayer(nickname, client_socket):
     return playerNum, gameId
 
 def sendMsg(msg, client_socket):
-    f_msg = str.encode(msg)
-    client_socket.sendto(f_msg,(HOST,PORT))
+    f_msg = str.encode(msg + "\0")
+    client_socket.sendto(f_msg ,(HOST,PORT))
 
 
 def receiveOpponent(client_socket):
@@ -36,7 +36,7 @@ def receiveOpponent(client_socket):
     return opponent_nickname
 
 def sendAndReceiveMovement(client_socket, msg):
-    a = str.encode(msg)
+    a = str.encode(msg+ "\0")
     #if movement != "NONE":
     print("Sent " + msg + " to the server")
     client_socket.sendto(a,(HOST,PORT))

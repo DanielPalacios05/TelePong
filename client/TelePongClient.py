@@ -1,6 +1,11 @@
 import pygame
 import time
 import myPongProtocol
+import time
+import os
+
+# Get the directory where the script is located
+script_dir = os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 pygame.init()
 
@@ -139,6 +144,7 @@ class Ball:
 
 
 def main():
+    
     running = True
     show = True
     movements = []
@@ -223,6 +229,8 @@ def main():
         print(msg)
         oponent = "NONE"
         oponent = myPongProtocol.sendAndReceiveMovement(client_socket, msg)
+        oponent = oponent.replace("\x00","")
+
         print("Oponente movió: "+oponent)
         
         print("oponent: "+str(oppNickname))
