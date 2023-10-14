@@ -87,6 +87,11 @@ void sendOpponent(int server_socket, char *nickname, struct sockaddr_storage add
 }
 
 
+void receiveMsg(int socket, char *msg, size_t max_length){
+
+    int bytes_read = recv(socket, msg, max_length - 1, 0);
+}
+
 
 void sockaddrStorageToString(const struct sockaddr_storage *addr, char* buffer) {
 
@@ -216,7 +221,6 @@ struct Response handleCommunication(char *message)
     }
     else if (strcmp(token, "SERVER") == 0)
     {
-
         printf("Hemos recibido SERVER\n");
         token = strtok(NULL, " ");
         if (strcmp(token, "CREATE_SOCKET") == 0)
@@ -248,6 +252,19 @@ struct Response handleCommunication(char *message)
             socklen_t address_len = sizeof(address);
 
             sendGameInfo(socket, playerNum, gameId, address, address_len);
+        }else if (strcmp(token, "LISTEN_MSG") == 0)
+        {
+            printf("Hemos recibido el LISTEN_MSG\n");
+
+            token = strtok(NULL, " ");
+            int socket = atoi(token);
+            char msg[100];
+            receiveMsg(socket, msg, sizeof(msg));
+            struct Response response;
+            printf("Mensaje recibido  %s \n", response.msg);
+            strncpy(response.msg, msg, sizeof(response.msg));
+            response.msg[sizeof(response.msg) - 1] = '\0';
+            return response;
         }
     }
 }
