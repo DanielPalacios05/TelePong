@@ -37,7 +37,7 @@ struct Response {
     char msg[100];
 };
 
-struct address
+struct MessageStructure
 {
     struct sockaddr addressSock;
     socklen_t client_len;
@@ -47,8 +47,7 @@ struct address
 struct request
 {
     int bytesAmount;
-    char body[REQUESTSIZE];
-    struct address clientAddress;   
+    char body[REQUESTSIZE];   
 };
 
 struct Player players[MAX_PLAYERS];

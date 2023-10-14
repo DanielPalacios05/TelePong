@@ -86,49 +86,51 @@ void sendOpponent(int server_socket, char *nickname, struct sockaddr_storage add
     sendto(server_socket, nickname, strlen(nickname) + 1, 0, (struct sockaddr *)&address, address_len);
 }
 
-
-void receiveMsg(int socket, char *msg, size_t max_length){
-
+void receiveMsg(int socket, char *msg, size_t max_length)
+{
     int bytes_read = recv(socket, msg, max_length - 1, 0);
 }
 
-
-void sockaddrStorageToString(const struct sockaddr_storage *addr, char* buffer) {
-
-    if (addr->ss_family == AF_INET) {
+void sockaddrStorageToString(const struct sockaddr_storage *addr, char *buffer)
+{
+    if (addr->ss_family == AF_INET)
+    {
         struct sockaddr_in *addr_in = (struct sockaddr_in *)addr;
         const char *ip_str = inet_ntoa(addr_in->sin_addr);
 
-        if (ip_str != NULL) {
+        if (ip_str != NULL)
+        {
             snprintf(buffer, MAX_ADDR_LEN, "%s:%d", ip_str, ntohs(addr_in->sin_port));
         }
-    } else {
+    }
+    else
+    {
         snprintf(buffer, MAX_ADDR_LEN, "Dirección desconocida");
     }
 }
 
-
-
-
-char *socklen_tToCString(socklen_t *client_len) {
-    char *len_str  = malloc(sizeof(char*)*20); // Declaración de una cadena para almacenar el valor convertido
+char *socklen_tToCString(socklen_t *client_len)
+{
+    char *len_str = malloc(sizeof(char *) * 20); // Declaración de una cadena para almacenar el valor convertido
     // Utiliza sprintf para convertir el valor de len a una cadena
     sprintf(len_str, "%lu", (unsigned long)client_len);
     // Maneja otros tipos de direcciones según sea necesario
     return len_str;
 }
 
-struct sockaddr_storage resolveAddress(char *token){
+struct sockaddr_storage resolveAddress(char *token)
+{
 
-    char* colon_position = strchr(token, ':');
-    if (colon_position == NULL) {
+    char *colon_position = strchr(token, ':');
+    if (colon_position == NULL)
+    {
         fprintf(stderr, "Error: Cadena no válida\n");
     }
 
     *colon_position = '\0'; // Reemplazar ':' por un carácter nulo
 
-    char* ip_str = token;
-    char* port_str = colon_position + 1;
+    char *ip_str = token;
+    char *port_str = colon_position + 1;
     printf("IP: %s - PORT: %s", ip_str, port_str);
 
     struct addrinfo *converted_address;
@@ -159,9 +161,6 @@ struct sockaddr_storage resolveAddress(char *token){
     return address;
 }
 
-
-
-
 struct Response handleCommunication(char *message)
 {
     char *message2 = message;
@@ -189,10 +188,10 @@ struct Response handleCommunication(char *message)
             struct Response response;
             response.player = receivePlayer(socket);
             printf("Hemos recibido al jugador: %s\n", response.player.nickname);
-            sockaddrStorageToString(&response.player.address,response.address);
+            sockaddrStorageToString(&response.player.address, response.address);
             strncpy(response.player.addressText, response.address, sizeof(response.player.addressText));
             printf("Sin error !!\n");
-            
+
             strncpy(response.client_len, socklen_tToCString(&response.player.address_len), sizeof(response.client_len));
             strncpy(response.player.addressLenText, response.client_len, sizeof(response.player.addressLenText));
 
@@ -211,7 +210,7 @@ struct Response handleCommunication(char *message)
 
             token = strtok(NULL, " ");
             printf("Ha llegado hasta aca.... \n");
-            
+
             struct sockaddr_storage address = resolveAddress(token);
             printf("Ha llegado hasta aca 22.... \n");
             socklen_t address_len = sizeof(address);
@@ -246,13 +245,14 @@ struct Response handleCommunication(char *message)
 
             token = strtok(NULL, " ");
             printf("Ha llegado hasta aca.... \n");
-            
+
             struct sockaddr_storage address = resolveAddress(token);
             printf("Ha llegado hasta aca 22.... \n");
             socklen_t address_len = sizeof(address);
 
             sendGameInfo(socket, playerNum, gameId, address, address_len);
-        }else if (strcmp(token, "LISTEN_MSG") == 0)
+        }
+        else if (strcmp(token, "LISTEN_MSG") == 0)
         {
             printf("Hemos recibido el LISTEN_MSG\n");
 

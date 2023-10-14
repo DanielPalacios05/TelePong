@@ -10,6 +10,65 @@
 #include "constants.h"
 #include "utils.c"
 
+
+void handle_request(int sock,struct request *req){
+    
+    char copyString[REQUESTSIZE];
+    strcpy(copyString,(req->body));
+    //printf("data from %s: %s\n",&req,copyString);
+    char *ptr;
+    char* tempPr = copyString;
+
+    ptr = strtok_r(tempPr," ",&tempPr);
+
+    printf("%s\n",ptr);
+    
+}
+
+
+void* threadBody(void* args){
+
+    
+    struct Response *response_ptr = (struct Response *)args;
+    struct Response response;
+    response = handleCommunication(response_ptr->msg);
+
+    char token[100];
+    strcpy(token, players[0].addressText);
+    char *colon_position = strchr(token, ':');
+    *colon_position = '\0'; // Reemplazar ':' por un carácter nulo
+
+    char *ip_str = token;
+    char *port_str = colon_position + 1;
+
+
+    char logString[500];
+    //concat(logString,5, &addressBuffer," ",&portBuffer,": ",requestArgs->request.body);    
+
+    //logToFile(logger,logString);
+
+    //handle_request(requestArgs->sock,&requestArgs->request);
+
+    //free(requestArgs);
+
+
+    pthread_exit(NULL);
+}
+
+
+
+void hola(){
+    char token[100];
+    strcpy(token, players[0].addressText);
+    char *colon_position = strchr(token, ':');
+    *colon_position = '\0'; // Reemplazar ':' por un carácter nulo
+
+    char *ip_str = token;
+    char *port_str = colon_position + 1;
+    printf("IP: %s - PORT: %s - NAME: %s\n", ip_str, port_str, players[0].nickname);
+}
+
+
 int main()
 {
     struct Response response;
@@ -100,12 +159,19 @@ fr:
             }
 
             printf("Player %s connected.\n", players[numPlayers].nickname);
+            hola();
+            
             ++numPlayers;
         }
     }else{
 
         
+        strcpy(response.serverSocketStr, server_socketStr);
+        struct Response *response_ptr = &response; // Obtén un puntero a la estructura
+        pthread_t tid;
+        pthread_create(&tid, NULL, threadBody, (void *)response_ptr);
 
     }
     goto fr;
 }
+
