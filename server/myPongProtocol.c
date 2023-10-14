@@ -216,6 +216,20 @@ struct Response handleCommunication(char *message)
             socklen_t address_len = sizeof(address);
 
             sendOpponent(socket, oppNickname, address, address_len);
+
+        }else if (strcmp(token, "MOVE") == 0)
+        {
+            printf("Hemos recibido el MOVE\n");
+            token = strtok(NULL, " ");
+            int gameId = atoi(token);
+            printf(" Este es el gameId %d    |||\n", gameId);
+
+            token = strtok(NULL, " ");
+            int playerNum = atoi(token);
+            printf(" Este es el playerNum %d    |||\n", playerNum);
+
+            token = strtok(NULL, " ");
+            printf("Ha llegado hasta aca.... \n");
         }
     }
     else if (strcmp(token, "SERVER") == 0)
