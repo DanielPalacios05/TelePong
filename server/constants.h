@@ -2,9 +2,9 @@
 #define CONSTANTS_H
 #define MAX_PLAYERS 20
 #define PORT 8080
-#define PORT2 "8080"
 #define BUFFER_SIZE 1024
 #define MAX_ADDR_LEN 100
+#define REQUESTSIZE 1024
 #include <sys/socket.h>
 
 struct Player {
@@ -31,8 +31,24 @@ struct Game {
 struct Response {
     struct Player player;
     int server_socket;
+    char serverSocketStr[100];
     char address[200];
     char client_len[100];
+    char msg[100];
+};
+
+struct address
+{
+    struct sockaddr addressSock;
+    socklen_t client_len;
+};
+
+
+struct request
+{
+    int bytesAmount;
+    char body[REQUESTSIZE];
+    struct address clientAddress;   
 };
 
 struct Player players[MAX_PLAYERS];
