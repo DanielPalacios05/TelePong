@@ -10,9 +10,8 @@ def createSocket():
 
     return client_socket
 
-def createPlayer(nickname):
+def createPlayer(nickname, client_socket):
     f_nickname = str.encode(nickname)
-    client_socket = createSocket()
     client_socket.sendto(f_nickname,(HOST,PORT))
 
     player_number_bytes, _ = client_socket.recvfrom(1)
@@ -21,7 +20,12 @@ def createPlayer(nickname):
     playerNum = int.from_bytes(player_number_bytes, byteorder='big', signed=False)
     gameId = int.from_bytes(game_id_bytes, byteorder='big', signed=False)
 
-    return playerNum, gameId, client_socket
+    return playerNum, gameId
+
+def sendMsg(msg, client_socket):
+    f_msg = str.encode(msg)
+    client_socket.sendto(f_msg,(HOST,PORT))
+
 
 def receiveOpponent(client_socket):
 
