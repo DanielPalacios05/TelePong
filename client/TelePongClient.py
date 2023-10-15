@@ -174,7 +174,7 @@ def main():
     
     pygame.display.set_caption("TelePong Party - "+player1.name+" vs "+player2.name)
 
-    ball = Ball(WIDTH//2, HEIGHT//2, 9, 2, WHITE)
+    ball = Ball(WIDTH//2, HEIGHT//2, 9, 10, WHITE)
 
     listOfPlayers = [player1, player2]
 

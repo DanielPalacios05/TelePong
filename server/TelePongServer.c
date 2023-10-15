@@ -21,13 +21,6 @@ void handle_request(char *sock, char *msg, struct Player player){
         concat(temp, 6, "PLAYER SEND_MOVE ", msg, " ", sock, " ", player.addressText);
         handleCommunication(temp);
     }
-    //printf("data from %s: %s\n",&req,copyString);
-    char *ptr;
-    char* tempPr = copyString;
-
-    ptr = strtok_r(tempPr," ",&tempPr);
-
-    printf("%s\n",ptr);
     
 }
 
