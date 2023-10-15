@@ -24,7 +24,7 @@ int createClientSocket()
     return client_socket;
 }
 
-int createServerSocket()
+int createServerSocket(char* port)
 {
     int server_socket = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -37,7 +37,7 @@ int createServerSocket()
     struct sockaddr_in server_address;
     memset(&server_address, 0, sizeof(server_address));
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(PORT);       // Puerto deseado
+    server_address.sin_port = htons(atoi(port));       // Puerto deseado
     server_address.sin_addr.s_addr = INADDR_ANY; // Escuchar en todas las interfaces
 
     // Vincular el socket a la dirección y puerto
@@ -284,8 +284,9 @@ struct Response handleCommunication(char *message)
      token = strtok_r(tokenTemp, " ",&tokenTemp);
         if (strcmp(token, "CREATE_SOCKET") == 0)
         {
-            //printf("Hemos recibido el CREATE_SOCKET\n");
-            int socket = createServerSocket();
+            //CONSEGUIR PUERTO
+            token = strtok_r(tokenTemp, " ",&tokenTemp);
+            int socket = createServerSocket(token);
             struct Response response;
             response.server_socket = socket;
             return response;
@@ -320,7 +321,6 @@ struct Response handleCommunication(char *message)
             receiveMsg(socket, msg, sizeof(msg));
             struct Response response;
             strncpy(response.msg, msg, sizeof(msg));
-            printf("Mensaje recibido  %s \n", response.msg);
             response.msg[sizeof(response.msg) - 1] = '\0';
             return response;
         }

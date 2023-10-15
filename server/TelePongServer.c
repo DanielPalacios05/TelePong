@@ -9,6 +9,9 @@
 #include "myPongProtocol.c"
 #include "constants.h"
 #include "utils.c"
+#include "logger.c"
+char* PORT;
+Logger logger;
 
 
 void handle_request(char *sock, char *msg, struct Player player){
@@ -54,7 +57,7 @@ void* threadBody(void* args){
     
     concat(logString,5, ip_str," ",port_str,": ",response_ptr->msg);    
 
-    //logToFile(logger,logString);
+    logToFile(logger,logString);
 
     handle_request(response_ptr->serverSocketStr, response.msg, player);
 
@@ -63,17 +66,58 @@ void* threadBody(void* args){
 }
 
 
-int main()
+int checkArguments(int argc, char* argv[]){
+
+    if(argc < 3){
+        fprintf(stderr, "Too few arguments\n");
+        return 1;
+    }
+    if(argc > 3){
+        fprintf(stderr, "Too many arguments\n");
+        return 1;
+    }
+
+    return 0;
+    
+}
+
+int main(int argc, char* argv[])
 {
+
+    if(checkArguments(argc,argv)){
+        exit(1);
+    }
+
+    //Initialize PORT AND Logger
+    PORT = argv[1];
+    logger.printEnabled = 1;
+    logger.logfile = NULL;
+    logger.filename = NULL;
+
+    setFile(&logger, argv[2]);
+
+    char logMessage[500];
+    
+    concat(logMessage,2,"Logging to file: ",logger.filename);
+
+    logToFile(logger,logMessage);
+
+
+    char createSocketMessage[30];
+
+
+    concat(createSocketMessage,2,"SERVER CREATE_SOCKET ",PORT);
+    
+    
     struct Response response;
-    response = handleCommunication("SERVER CREATE_SOCKET");
+    response = handleCommunication(createSocketMessage);
     int server_socket = response.server_socket;
     char server_socketStr[20]; 
     snprintf(server_socketStr, sizeof(server_socketStr), "%d", server_socket);
     response.server_socket = 0;
-    char message[100];
+    
 
-    printf("Waiting for players to connect...\n");
+    
 
     int numPlayers = 0;
     int gamePos = 0;
@@ -83,7 +127,10 @@ int main()
         games[i].totalNumPlayers = 0;
     }
 
-fr:
+    logToFile(logger,"Waiting for players to connect...");
+
+while(1){
+    char message[100];
     strcpy(message, "SERVER LISTEN_MSG ");
     concat(message, 1, server_socketStr);
     response = handleCommunication(message);
@@ -141,7 +188,7 @@ fr:
             {   
                 strcpy(message, "PLAYER SEND_OPP ");
                 concat(message, 5, server_socketStr, " ", games[gamePos].player2.nickname, " ", games[gamePos].player1.addressText);
-                //printf("Mensaje =>>   %s   ",message);
+                printf("Mensaje =>>   %s   ",message);
                 handleCommunication(message);
                 //sendOpponent(server_socket, games[gamePos].player2.nickname, games[gamePos].player1);
 
@@ -157,13 +204,12 @@ fr:
             ++numPlayers;
         }
     }else{
-        printf("Entra al else...\n");
         strcpy(response.serverSocketStr, server_socketStr);
         struct Response *response_ptr = &response; // Obtén un puntero a la estructura
         pthread_t tid;
         pthread_create(&tid, NULL, threadBody, (void *)response_ptr);
 
     }
-    goto fr;
+}
 }
 
