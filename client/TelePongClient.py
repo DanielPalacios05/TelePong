@@ -85,7 +85,7 @@ class Striker:
             self.posx = 20
             self.posy = (HEIGHT//2)-70
         elif self.name == "Player 2":
-            self.posx = WIDTH-30
+            self.posx = WIDTH-40
             self.posy = (HEIGHT//2)-70
 
 # Ball class
@@ -135,6 +135,10 @@ class Ball:
 
     # Used to reflect the ball along the X-axis
     def hit(self):
+        if self.xFac == -1:
+            self.posx = 31
+        else:
+            self.posx = WIDTH - 31
         self.xFac *= -1
 
     def getRect(self):
@@ -165,13 +169,15 @@ def main():
         oppNickname = myPongProtocol.receiveOpponent(client_socket)
     
     # Defining the objects
+    # Striker 
     if playerNumber == 1:
-        player1 = Striker(7, (HEIGHT//2)-70, 6, 110, 10, WHITE, nickname)
-        player2 = Striker(WIDTH-17, (HEIGHT//2)-70, 6, 110, 10, WHITE, oppNickname)
+        player1 = Striker(10, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
+        player2 = Striker(WIDTH-20, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
+        # posx, posy, width, height, speed, color, name
     elif playerNumber == 2:
-        player1 = Striker(10, (HEIGHT//2)-70, 7, 110, 10, WHITE, oppNickname)
-        player2 = Striker(WIDTH-20, (HEIGHT//2)-70, 9.5, 110, 10, WHITE, nickname)
-    
+        player1 = Striker(10, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
+        player2 = Striker(WIDTH-20, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
+        # posx, posy, width, height, speed, color, name
     pygame.display.set_caption("TelePong Party - "+player1.name+" vs "+player2.name)
 
     ball = Ball(WIDTH//2, HEIGHT//2, 10, 10, WHITE)
