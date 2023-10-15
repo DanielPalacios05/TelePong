@@ -1,14 +1,14 @@
 # Proyecto N°1 - Telemática | TelePong.
 
-# Tabla de contenidos.
-- Introducción.
-- Desarrollo.
-  - Descripción de aspectos generales.
-  - Descripción de aspectos personalizados/ajustados.
-  - Descripción de tecnologías.
-  - Descripción del protocolo.
-- Conclusiones.
-- Referencias.
+### Tabla de contenidos.
+- [Introducción.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#introduccio%CC%81n)
+- [Desarrollo.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#desarrollo)
+  - [Descripción de aspectos generales.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#descripci%C3%B3n-de-aspectos-generales-qu%C3%A9-se-hizo)
+  - [Descripción de aspectos personalizados/ajustados.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#descripci%C3%B3n-de-aspectos-personalizadosajustados-qu%C3%A9-funcionalides-tiene)
+  - [Descripción de tecnologías.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#descripci%C3%B3n-de-tecnolog%C3%ADas-c%C3%B3mo-se-hizo)
+  - [Descripción del protocolo.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#descripci%C3%B3n-del-protocolo)
+- [Conclusiones.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#conclusiones)
+- [Referencias.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#referencias)
 
 ## Introducción.
 
