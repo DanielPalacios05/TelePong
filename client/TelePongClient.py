@@ -26,7 +26,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("TelePong Party - Waiting for players")
 
 clock = pygame.time.Clock()
-FPS = 30
+FPS = 15
 
 # Striker class
 
@@ -166,15 +166,15 @@ def main():
     
     # Defining the objects
     if playerNumber == 1:
-        player1 = Striker(20, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
-        player2 = Striker(WIDTH-30, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
+        player1 = Striker(7, (HEIGHT//2)-70, 6, 110, 10, WHITE, nickname)
+        player2 = Striker(WIDTH-17, (HEIGHT//2)-70, 6, 110, 10, WHITE, oppNickname)
     elif playerNumber == 2:
-        player1 = Striker(20, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
-        player2 = Striker(WIDTH-30, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
+        player1 = Striker(10, (HEIGHT//2)-70, 7, 110, 10, WHITE, oppNickname)
+        player2 = Striker(WIDTH-20, (HEIGHT//2)-70, 9.5, 110, 10, WHITE, nickname)
     
     pygame.display.set_caption("TelePong Party - "+player1.name+" vs "+player2.name)
 
-    ball = Ball(WIDTH//2, HEIGHT//2, 9, 10, WHITE)
+    ball = Ball(WIDTH//2, HEIGHT//2, 10, 10, WHITE)
 
     listOfPlayers = [player1, player2]
 

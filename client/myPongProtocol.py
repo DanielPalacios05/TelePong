@@ -2,7 +2,8 @@
 
 import socket
 
-HOST = "35.172.191.163"  # The server's hostname or IP address
+#HOST = "35.172.191.163"  # The server's hostname or IP address
+HOST = "127.0.0.1"
 PORT = 8080  # The port used by the server
 
 def createSocket():
