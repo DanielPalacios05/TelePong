@@ -83,14 +83,32 @@ void sendGameInfo(int server_socket, int playerNum, int gameId, struct sockaddr_
 
 void sendOpponent(int server_socket, char *nickname, struct sockaddr_storage address, socklen_t address_len)
 {
-    sendto(server_socket, nickname, strlen(nickname) + 1, 0, (struct sockaddr *)&address, address_len);
+    int flag = -1;
+    while (flag == -1)
+    {
+        flag = sendto(server_socket, nickname, strlen(nickname) + 1, 0, (struct sockaddr *)&address, address_len);
+        printf("%d",flag);
+    }
+    
 }
 
 
 
 void sendMovement(char *move, int server_socket, struct sockaddr_storage address, socklen_t address_len)
 {
-    sendto(server_socket, move, sizeof(move), 0, (struct sockaddr *)&address, address_len);
+    int flag = -1;
+    while (flag == -1)
+    {
+        flag = sendto(server_socket, move, sizeof(move), 0, (struct sockaddr *)&address, address_len);
+        
+        if(flag == -1){
+        printf("%d",flag);
+        }
+
+
+    }
+    
+    
 }
 
 
@@ -231,19 +249,13 @@ struct Response handleCommunication(char *message)
 
         }else if (strcmp(token, "MOVE") == 0)
         {
-            printf("Hemos recibido el MOVE\n");
      token = strtok_r(tokenTemp, " ",&tokenTemp);
             int gameId = atoi(token);
-            printf(" Este es el gameId %d    |||\n", gameId);
-
      token = strtok_r(tokenTemp, " ",&tokenTemp);
             int playerNum = atoi(token);
-            printf(" Este es el playerNum %d    |||\n", playerNum);
      token = strtok_r(tokenTemp, " ",&tokenTemp);
             char move[50];
             strcpy(move, token);
-            printf(" Este es el movimiento %s    |||\n", move);
-
             struct Response response;
             response.gameId = gameId;
             response.playerNum = playerNum;
@@ -252,11 +264,9 @@ struct Response handleCommunication(char *message)
 
         }else if (strcmp(token, "SEND_MOVE") == 0)
         {
-            printf("Hemos recibido el SEND_MOVE\n");
      token = strtok_r(tokenTemp, " ",&tokenTemp);
             char move[50];
             strcpy(move, token);
-            printf(" Este es el movimiento %s    |||\n", move);
 
      token = strtok_r(tokenTemp, " ",&tokenTemp);
             int socket = atoi(token);
@@ -303,7 +313,6 @@ struct Response handleCommunication(char *message)
         }
         else if (strcmp(token, "LISTEN_MSG") == 0)
         {
-            printf("Hemos recibido el LISTEN_MSG\n");
 
      token = strtok_r(tokenTemp, " ",&tokenTemp);
             int socket = atoi(token);
