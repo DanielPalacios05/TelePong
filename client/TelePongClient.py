@@ -1,11 +1,14 @@
 import pygame
 import time
 import myPongProtocol
+import getInfoWindow
 import time
 import os
 
 # Get the directory where the script is located
 script_dir = os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+nickname, ipAddress, port = getInfoWindow.receiveInfo()
 
 pygame.init()
 
@@ -148,12 +151,13 @@ class Ball:
 
 
 def main():
+
+
     
     running = True
     show = True
     movements = []
 
-    nickname = input()
     oppNickname = " "
     
     client_socket = myPongProtocol.createSocket()
