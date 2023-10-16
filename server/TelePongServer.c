@@ -194,6 +194,8 @@ int main(int argc, char* argv[])
 
     char createSocketMessage[30];
 
+    memset(createSocketMessage,0,30);
+
 
     concat(createSocketMessage,2,"SERVER CREATE_SOCKET ",PORT);
     
