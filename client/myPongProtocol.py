@@ -2,6 +2,7 @@
 
 import socket
 
+
 #HOST = "127.0.0.1"  # The server's hostname or IP address
 HOST = "18.215.165.27"
 PORT = 8080  # The port used by the server
@@ -40,6 +41,7 @@ def sendAndReceiveMovement(client_socket, msg):
     a = str.encode(msg+ "\0")
     #if movement != "NONE":
     print("Sent " + msg + " to the server")
+    
     client_socket.sendto(a,(HOST,PORT))
     
     # In the client code where you receive data from the server

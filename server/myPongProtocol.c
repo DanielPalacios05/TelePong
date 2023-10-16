@@ -31,6 +31,7 @@ int createServerSocket(char* port)
     if (server_socket == -1)
     {
         perror("Error al crear el socket");
+        exit(1);
     }
 
     // Configurar la dirección y el puerto en los que se escucharán los datagramas
@@ -45,6 +46,7 @@ int createServerSocket(char* port)
     {
         perror("Error al vincular el socket");
         close(server_socket);
+        exit(1);
     }
     return server_socket;
 }
