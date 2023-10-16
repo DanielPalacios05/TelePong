@@ -48,6 +48,7 @@ Por otro lado, para poder implementar lo relacionado con la concurrencia, es dec
 Ahora, con relación al cliente, se hizo uso de la librería Pygame de Python, para establecer la estructura, lógica, y vistas del juego, basándose fuertemente en la POO (Programación Orientada a Objetos) con el fin de realizar un mejor manejo de los diferentes elementos del juego. De manera adicional, se usaron otras librerías como **os (```import os```)** y **time (```import time```)** con el fin de brindar otras herramientas necesarias para el funcionamiento del cliente.
 
 ### Descripción del protocolo.
+Con relación al protocolo, cabe mencionar que se desarrolló con el fin posbilitar el bajo acoplamiento entre el cliente, el servidor y la librería de _sockets_. De esta forma, así como se tiene implementado, basta con que el cliente y el servidor importen o incluyan al protocolo en su lenguaje correspondiente. Por lo tanto, el protocolo se definió basado en texto, de tal manera que la comunicación entre el cliente-protocolo y servidor-protocolo es a través de una cadena de texto que incluye la información necesaria para poder realizar determinada acción del lado del protocolo, usando los _sockets_. El protocolo recibe entonces la cadena que le envía el servidor o el cliente y realiza un parseo de la misma, con el fin de extraer la información necesaria. De tal 
 
 ## Conclusiones.
 ## Referencias. 
