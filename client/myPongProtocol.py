@@ -12,7 +12,7 @@ def createSocket():
     return client_socket
 
 def createPlayer(nickname, client_socket):
-    f_nickname = str.encode(nickname+ "\0")
+    f_nickname = str.encode("SERVER INIT_PLAYER " + nickname + "\0")
     client_socket.sendto(f_nickname,(HOST,PORT))
 
     player_number_bytes, _ = client_socket.recvfrom(1)

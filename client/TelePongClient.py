@@ -158,11 +158,8 @@ def main():
     
     client_socket = myPongProtocol.createSocket()
 
-    myPongProtocol.sendMsg("SERVER INIT_PLAYER", client_socket)
-
     # Se debe pedir por pantalla la IP y PORT del server para almacenarlos
     #  y poder después hacer el envío de mensajes.
-
     playerNumber, gameId = myPongProtocol.createPlayer(nickname, client_socket)
     print(gameId)
     while len(oppNickname) == 1:
