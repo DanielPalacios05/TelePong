@@ -85,13 +85,21 @@ Con relación al prefijo **PLAYER**:
 - PLAYER RECEIVE <ins>_SOCKET_</ins>: Permite la rececepción de un nuevo jugador para posteriormente asignarlo a una sala o _game_ junto con la información necesaria para jugar, usando el _socket_ del servidor, tomándolo del espacio <ins>_SOCKET_</ins>.
 - PLAYER SEND_OPP <ins>_SOCKET_</ins> <ins>_NICKNAME_</ins> <ins>_PLAYER_ADD_</ins>: Permite el envío de la información requiere un jugador con relación a quién es su oponente (<ins>_NICKNAME_</ins>), usando el _socket_ del servidor (<ins>_SOCKET_</ins>), y la dirección IP junto con el puerto (<ins>_PLAYER_ADD_</ins>) del jugador que va a recibir a su oponente
 - PLAYER RECEIVE_OPP <ins>_SOCKET_</ins>: Permite la recepción del _nickname_ del oponente que le corresponde al jugador, después de que el servidor hizo la distribución necesaria de los jugadores entrantes en las salas disponibles, usando el _socket_ del cliente que se encuentra en el espacio correspondiente de la instrucción.
+- PLAYER SEND_MSG <ins>_SOCKET_</ins> <ins>_MESSAGE_</ins>: Permite enviar un determinado mensaje (<ins>_MESSAGE_</ins>), usando el _socket_ del cliente (<ins>_SOCKET_</ins>)
+- PLAYER SEND_MOVE <ins>_SOCKET_</ins> <ins>_MESSAGE_</ins>: Permite que el cliente pueda enviar al servidor un mensaje (<ins>_MESSAGE_</ins>) que está relacionado con el movimiento que este realiza en el juego usando su _socket_ (<ins>_SOCKET_</ins>).
+- PLAYER MOVE <ins>_GAME_ID_</ins> <ins>_PLAYER_NUM_</ins> <ins>_MOVEMENT_</ins>: Permite que el servidor pueda conocer qué jugador realizó qué movimiento a partir de la información incluida en el mensaje completo, dónde se puede obtener qué número de jugador (<ins>_PLAYER_NUM_</ins>) de qué juego o partida (<ins>_GAME_ID_</ins>) realizó determinado movimiento (<ins>_MOVEMENT_</ins>).
+- PLAYER SEND_MOVE_OPP <ins>_MOVEMENT_</ins> <ins>_SOCKET_</ins> <ins>_PLAYER_ADD_</ins>: Permite que el servidor envíe un movimiento que realizó un jugador de determinada partida a la dirección IP del oponente. Esto se logra usando el _socket_ del servidor (<ins>_SOCKET_</ins>), el movimiento que realizó el jugador (<ins>_MOVEMENT_</ins>), y la dirección IP junto con el puerto (<ins>_PLAYER_ADD_</ins>) del oponente respectivo.
 - PLAYER DELETE <ins>_GAME_ID_</ins> <ins>_PLAYER_NUM_</ins>: Permite la eliminación de un jugador que se encuentra en el juego con id <ins>_GAME_ID_</ins> y con el número de juagdor <ins>_PLAYER_NUM_</ins>.
 
 Con relación al prefijo **SERVER**:
 - SERVER CREATE_SOCKET: Permite la creación del socket del servidor, el cual será utilizado durante todo el juego para el envío hacia y recepción de mensajes de parte de los diferentes clientes conectados.
+- SERVER LISTEN_MSG <ins>_SOCKET_</ins>: Permite que el servidor escuche por un posible mensaje entrante de parte de algún cliente conectado, usando su _socket_ (<ins>_SOCKET_</ins>).
 - SERVER GAME_INFO <ins>_SOCKET_</ins> <ins>_PLAYER_NUM_</ins> <ins>_GAME_ID_</ins> <ins>_PLAYER_ADD_</ins>: Permite el envío de la información necesaria de la partida para poder jugar. Ahí se incluye el _socket_ del servidor (<ins>_SOCKET_</ins>) para poder enviar la información correspondiente, el número del jugador (<ins>_PLAYER_NUM_</ins>) y el id del juego o partida en la que se encuentra el jugador (<ins>_PLAYER_NUM_</ins>) a la dirección IP junto con el puerto (<ins>_PLAYER_ADD_</ins>) del jugador que la va a recibir.
 
 ## Conclusiones.
+
+
+
 ## Referencias. 
 
 - GeeksforGeeks. (2021). How to create a text input box with PyGame. GeeksforGeeks. https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
