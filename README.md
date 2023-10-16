@@ -53,5 +53,5 @@ Con relación al protocolo, cabe mencionar que se desarrolló con el fin posbili
 ## Conclusiones.
 ## Referencias. 
 
-https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
-https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
+- Follow, C. C. (2021, marzo 24). How to create a text input box with Pygame? GeeksforGeeks. https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
+- TCP server-client implementation in C. (2018, septiembre 12). GeeksforGeeks. https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
