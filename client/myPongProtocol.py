@@ -5,7 +5,7 @@ import socket
 
 #HOST = "127.0.0.1"  # The server's hostname or IP address
 HOST = "18.215.165.27"
-PORT = 8080  # The port used by the server
+PORT = 8081  # The port used by the server
 
 def createSocket():
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
