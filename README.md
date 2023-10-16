@@ -36,7 +36,7 @@ Un aspecto muy importante en este sentido es que no se realizó la importación 
 
 Por otro lado, para poder implementar lo relacionado con la concurrencia, es decir, la conexión simultánea de múltiples clientes al juego, de tal manera que todos puedan jugar con su respectivo oponente, se hizo uso de los hilos en el servidor (```#include <pthread.h>```). De tal forma que el servidor esté en la capacidad de atender y responder a las _requests_ que le realizan los diferentes clientes que están jugando.
 
-Ahora, con relación al cliente, se hizo uso de la librería Pygame de Python, para establecer la estructura, lógica, y vistas del juego, basándose fuertemente en la POO (Programación Orientada a Objetos) con el fin de realizar un mejor manejo de los diferentes elementos del juego. De manera adicional, se usaron otras librerías como **os (```import os```)**  **time (```import time```)**
+Ahora, con relación al cliente, se hizo uso de la librería Pygame de Python, para establecer la estructura, lógica, y vistas del juego, basándose fuertemente en la POO (Programación Orientada a Objetos) con el fin de realizar un mejor manejo de los diferentes elementos del juego. De manera adicional, se usaron otras librerías como **os (```import os```)** y **time (```import time```)** con el fin de brindar otras herramientas necesarias para el funcionamiento del cliente.
 
 ### Descripción del protocolo.
 
