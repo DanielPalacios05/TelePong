@@ -1,15 +1,16 @@
 # Proyecto N°1 - Telemática | TelePong.
 
 ### Tabla de contenidos.
-- [Introducción.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#introduccio%CC%81n)
-- [Desarrollo.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#desarrollo)
-  - [Descripción de aspectos generales.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#descripci%C3%B3n-de-aspectos-generales-qu%C3%A9-se-hizo)
-  - [Descripción de aspectos personalizados/ajustados.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#descripci%C3%B3n-de-aspectos-personalizadosajustados-qu%C3%A9-funcionalides-tiene)
-  - [Descripción de tecnologías.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#descripci%C3%B3n-de-tecnolog%C3%ADas-c%C3%B3mo-se-hizo)
-  - [Descripción del protocolo.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#descripci%C3%B3n-del-protocolo)
-- [Conclusiones.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#conclusiones)
-- [Referencias.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#referencias)
+- [Introducción.](#introduccion)
+- [Desarrollo.](#desarrollo)
+  - [Descripción de aspectos generales.](#descripci%C3%B3n-de-aspectos-generales-qu%C3%A9-se-hizo)
+  - [Descripción de aspectos personalizados/ajustados.](#descripci%C3%B3n-de-aspectos-personalizadosajustados-qu%C3%A9-funcionalides-tiene)
+  - [Descripción de tecnologías.](#descripci%C3%B3n-de-tecnolog%C3%ADas-c%C3%B3mo-se-hizo)
+  - [Descripción del protocolo.](#descripci%C3%B3n-del-protocolo)
+- [Conclusiones.](#conclusiones)
+- [Referencias.](#referencias)
 
+<a name="introduccion"></a>
 ## Introducción.
 
 El documento a continuación tiene el propósito de exponer y detallar el trabajo realizado como proyecto N°1 de Telemática. Es importante mencionar que este trabajo fue desarrollado por Daniel Ricardo Palacios Diego, Damian Antonio Duque López y Esteban Trujillo Carmona.
@@ -17,6 +18,7 @@ Ahora bien, primero que todo, en este documento se explicará cuál fue el traba
 Posteriormente, se pasará a explicar de forma detallada cómo fue el diseño e implementación del protocolo necesario para la comunicación entre el servidor y el cliente, cuál es el vocabulario de mensajes usados, y su flujo de trabajo.
 Finalmente, se brindarán algunas conclusiones acerca del trabajo realizado, de la experiencia de desarrollo, de los retos afrontados, y en general, la experiencia con el trabajo, seguido de las referencias correspondientes. 
 
+<a name="desarrollo"></a>
 ## Desarrollo.
 
 ### Descripción de aspectos generales. ¿Qué se hizo?
