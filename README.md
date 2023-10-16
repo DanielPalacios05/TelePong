@@ -48,7 +48,19 @@ Por otro lado, para poder implementar lo relacionado con la concurrencia, es dec
 Ahora, con relación al cliente, se hizo uso de la librería Pygame de Python, para establecer la estructura, lógica, y vistas del juego, basándose fuertemente en la POO (Programación Orientada a Objetos) con el fin de realizar un mejor manejo de los diferentes elementos del juego. De manera adicional, se usaron otras librerías como **os (```import os```)** y **time (```import time```)** con el fin de brindar otras herramientas necesarias para el funcionamiento del cliente.
 
 ### Descripción del protocolo.
-Con relación al protocolo, cabe mencionar que se desarrolló con el fin posbilitar el bajo acoplamiento entre el cliente, el servidor y la librería de _sockets_. De esta forma, así como se tiene implementado, basta con que el cliente y el servidor importen o incluyan al protocolo en su lenguaje correspondiente. Por lo tanto, el protocolo se definió basado en texto, de tal manera que la comunicación entre el cliente-protocolo y servidor-protocolo es a través de una cadena de texto que incluye la información necesaria para poder realizar determinada acción del lado del protocolo, usando los _sockets_. El protocolo recibe entonces la cadena que le envía el servidor o el cliente y realiza un parseo de la misma, con el fin de extraer la información necesaria. De tal 
+Con relación al protocolo, cabe mencionar que se desarrolló con el fin posbilitar el bajo acoplamiento entre el cliente, el servidor y la librería de _sockets_. De esta forma, así como se tiene implementado, basta con que el cliente y el servidor importen o incluyan al protocolo en su lenguaje correspondiente. Por lo tanto, el protocolo se definió basado en texto, de tal manera que la comunicación entre el cliente-protocolo y servidor-protocolo es a través de una cadena de texto que incluye la información necesaria para poder realizar determinada acción del lado del protocolo, usando los _sockets_. El protocolo recibe entonces la cadena que le envía el servidor o el cliente y realiza un parseo de la misma, con el fin de extraer la información necesaria e identificar cuál es la acción que posteriormente debe ejecutar. Con relación a los mensajes usados para la comunicación, se estableció que se utilizarían dos prefijos o palabras iniciales de reconocimiento, las cuales serían **PLAYER** y **SERVER**. Así, pues, se tiene el siguiente conjunto de mensajes, los cuales son utilizados por el servidor y el cliente de la manera que a continuación se enuncia. 
+
+#### Mensajes usados por el servidor.
+Con relación al prefijo **PLAYER**:
+- PLAYER CREATE <ins>_NICKNAME_</ins>: Permite la creación de un nuevo jugador, tomando como _nickname_ el mandado en el espacio correspondiente.
+- PLAYER RECEIVE <ins>_SOCKET_</ins>: Permite la rececepción de un nuevo jugador para posteriormente asignarlo a una sala o _game_ junto con la información necesaria para jugar, usando el _socket_ del servidor, tomándolo del espacio <ins>_SOCKET_</ins>.
+- PLAYER SEND_OPP <ins>_SOCKET_</ins> <ins>_NICKNAME_</ins> <ins>_PLAYER_ADD_</ins>: Permite el envío de la información requiere un jugador con relación a quién es su oponente (<ins>_NICKNAME_</ins>), usando el _socket_ del servidor (<ins>_SOCKET_</ins>), y la dirección IP junto con el puerto (<ins>_PLAYER_ADD_</ins>) del jugador que va a recibir a su oponente
+- PLAYER RECEIVE_OPP <ins>_SOCKET_</ins>: Permite la recepción del _nickname_ del oponente que le corresponde al jugador, después de que el servidor hizo la distribución necesaria de los jugadores entrantes en las salas disponibles, usando el _socket_ del cliente que se encuentra en el espacio correspondiente de la instrucción.
+- PLAYER DELETE <ins>_GAME_ID_</ins> <ins>_PLAYER_NUM_</ins>: Permite la eliminación de un jugador que se encuentra en el juego con id <ins>_GAME_ID_</ins> y con el número de juagdor <ins>_PLAYER_NUM_</ins>.
+
+Con relación al prefijo **SERVER**:
+- SERVER CREATE_SOCKET.
+- SERVER GAME_INFO <ins>_SOCKET_</ins> <ins>_PLAYER_NUM_</ins> <ins>_GAME_ID_</ins> <ins>_PLAYER_ADD_</ins>.
 
 ## Conclusiones.
 ## Referencias. 
