@@ -5,10 +5,11 @@ import socket
 
 #HOST = "127.0.0.1"  # The server's hostname or IP address
 HOST = "18.215.165.27"
-PORT = 8080  # The port used by the server
+PORT = 8081  # The port used by the server
 
 def createSocket():
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client_socket  = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    
 
     return client_socket
 
@@ -38,14 +39,25 @@ def receiveOpponent(client_socket):
     return opponent_nickname
 
 def sendAndReceiveMovement(client_socket, msg):
+
+
+    client_socket.settimeout(2)
+
     a = str.encode(msg+ "\0")
     #if movement != "NONE":
     print("Sent " + msg + " to the server")
     
     client_socket.sendto(a,(HOST,PORT))
-    
-    # In the client code where you receive data from the server
-    opponent_move_bytes, _ = client_socket.recvfrom(4)
+
+    messageReceived = False
+    while not messageReceived:
+        try:
+            opponent_move_bytes, _ = client_socket.recvfrom(4)
+            messageReceived = True
+        except TimeoutError:
+            client_socket.sendto(a,(HOST,PORT))
+
+
     opponent_move = opponent_move_bytes.decode("utf-8")
     print("Received player move:"+ opponent_move)
     # Now you can use the player_number variable in your game logic

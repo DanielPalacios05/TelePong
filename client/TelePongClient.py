@@ -26,7 +26,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("TelePong Party - Waiting for players")
 
 clock = pygame.time.Clock()
-FPS = 15
+FPS = 30
 
 # Striker class
 
@@ -164,6 +164,8 @@ def main():
     print(gameId)
     while len(oppNickname) == 1:
         oppNickname = myPongProtocol.receiveOpponent(client_socket)
+    
+    print("opp",oppNickname)
     
     # Defining the objects
     # Striker 

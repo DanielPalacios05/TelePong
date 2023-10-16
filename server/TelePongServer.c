@@ -19,11 +19,14 @@ int gamePos = 0;
 
 void handle_request(char *sock, char *msg, struct Player player){
     
-    char copyString[REQUESTSIZE];
+
 
     if (strcmp(msg, "UP") == 0 || strcmp(msg, "DOWN") == 0 || strcmp(msg, "NONE") == 0) {
 
         char temp[200];
+        memset(temp,0,200);
+
+
         concat(temp, 6, "PLAYER SEND_MOVE ", msg, " ", sock, " ", player.addressText);
         handleCommunication(temp);
     }
@@ -49,8 +52,10 @@ void* threadBody(void* args){
     char* server_socketStr = incomingResponse.serverSocketStr;
     
     char message[100];
+    memset(message,0,100);
     struct Player player;
     char buffer[100];
+    memset(buffer,0,100);
 
     if(response.player.gameId == 0 && response.gameId == 0){
         printf("Mensaje ::::  %s \n", response.msg);
@@ -88,9 +93,11 @@ void* threadBody(void* args){
             }
             
             char numPlayerText[2];
+            memset(numPlayerText,0,2);
             convertInt2Char(players[numPlayers].playerNum, numPlayerText, sizeof(numPlayerText));
             //printf(" Player num INT  %d", players[numPlayers].playerNum);
             char gameIdText[4];
+            memset(gameIdText,0,4);
             convertInt2Char(players[numPlayers].gameId, gameIdText, sizeof(gameIdText));
             strcpy(message, "SERVER GAME_INFO ");
             concat(message, 7, server_socketStr, " ", numPlayerText, " ", gameIdText, " ", players[numPlayers].addressText);
@@ -186,6 +193,7 @@ int main(int argc, char* argv[])
     setFile(&logger, argv[2]);
 
     char logMessage[500];
+    memset(logMessage,0,500);
     
     concat(logMessage,2,"Logging to file: ",logger.filename);
 
