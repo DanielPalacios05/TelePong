@@ -5,6 +5,7 @@
 - [Desarrollo.](#desarrollo)
   - [Descripción de aspectos generales.](#descripci%C3%B3n-de-aspectos-generales-qu%C3%A9-se-hizo)
   - [Descripción de aspectos personalizados/ajustados.](#descripci%C3%B3n-de-aspectos-personalizadosajustados-qu%C3%A9-funcionalides-tiene)
+  - [Flujo del juego.](#flujo-del-juego-c%C3%B3mo-funciona)
   - [Descripción de tecnologías.](#descripci%C3%B3n-de-tecnolog%C3%ADas-c%C3%B3mo-se-hizo)
   - [Descripción del protocolo.](#descripci%C3%B3n-del-protocolo)
 - [Conclusiones.](#conclusiones)
