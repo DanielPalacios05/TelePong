@@ -31,6 +31,33 @@ Partiendo de la base general de lo que significa y establece el juego clásico d
 - Con el fin de aumentar la dificultad del juego a medida que pasa el tiempo desde que se inició la partida, se va aumentando gradualmente la velocidad de la pelota, de tal forma que será más difícil interceptarla y evitar que el oponente haga puntos.
 - Con el fin posibilitar la conexión de múltiples clientes de forma simultánea en el juego, y para permitir que el servidor sea capaz de atender de manera oportuna las solicitudes y mensajes de los clientes conectados, se implementaron los hilos, basándose en el concepto de _multi-threading_. Así, el juego es capaz de soportar a varios jugadores al mismo tiempo, con el propósito de brindar un servicio que pueda ser accedido por múltiples usuarios simultáneamente.
 
+### Flujo del juego. ¿Cómo funciona?
+De tal forma, el flujo del juego es el siguiente:
+- El servidor, encendido, escucha constantemente por mensajes del cliente.
+- El cliente se inicia, y envía un mensaje de inicialización del juego.
+- El servidor recibe ese mensaje, y lo compara para verificar que sí sea un mensaje de inicialización, o es un mensaje durante la partida.
+  - Como sí resulta ser un mensaje de inicialización el servidor se queda escuchando esperando que el jugador le envíe su _nickname_.
+  - El jugador le envía el _nickname_ al servidor.
+  - El servidor toma el _nickname_ y la dirección IP junto con el puerto del jugador, crea un jugador con esa información y lo agrega al arreglo de jugadores, y pasa a verificar en qué partida o sala puede ubicar a ese jugador.
+  - El servidor verifica, recorriendo cada sala cuál tiene espacio para este jugador. En este caso verifica dos tres cosas:
+    - Si la sala está vacía, entonces agrega ese jugador a esa sala siendo el jugador 1, y le asigna al jugador la información del id de esa sala y su número de jugador (1).
+    - Si la sala tiene solo un jugador, entonces agrega ese jugador a esa sala siendo el jugador 2, y le asigna al jugador la información del id de esa sala y su número de jugador (2).
+    - Si la sala está llena, es decir, tiene los dos jugadores, entonces pasa a verificar la siguiente sala, y así sucesivamente hasta que encuentre una sala donde pueda ingresar.
+  - Después de haberlo asignado a una sala, le envía al cliente la información de su número de jugador (1 o 2) y el id de la sala.
+  - El cliente recibe esa información y la guarda, y espera a recibir a su oponente.
+  - Pasado esto, el servidor verifica si el jugador que acaba de añadir al juego es el número 2.
+    - En caso de que sea, el servidor le enviará a ambos jugadores de esa sala el _nickname_ de su respectivo oponente.
+    - El cliente recibirá entonces el _nickname_ de su oponente y procederá a crear ambos jugadores en su propia instancia del juego sigiuendo la información que recibió (número de jugador propio y _nickname_ del oponente) y a iniciar el juego.
+- Como se había indicado al principio, el servidor sigue ahora escuchando constantemente de nuevo.
+- Lo que sigue acá de parte del cliente es enviar los mensajes de los movimientos correspondientes **UP**, **DOWN** y **NONE**, dependiendo de qué es lo que haga ese cliente, y esperar la recepción del movimiento del oponente.
+- El servidor recibe el mensaje y lo compara para verificar si es un mensaje de inicialización.
+  - Como esta vez no es un mensaje de inicialización, sino uno durante la partida, el servidor va a pasar ese mensaje junto con su _socket_ a un hilo, el cual llamará a la función threadBody, quien se encargará de atender ese mensaje y darle la respuesta correspondiente.
+    - En este caso, la respuesta será enviarle ese movimiento que recibió al oponente del jugador que envió el mensaje.
+    - Como cada cliente estaba esperando el movimiento de su oponente, y ya cada uno lo envió a quien correspondía, ambos lo reciben y reflejan su movimiento y el del oponente en el juego.
+    - Así se hará con cada movimiento que realicen los clientes durante todo el juego.
+    - Finalmente, el juego terminará cuando alguno de los dos clientes de la partida específica alcance primero los cinco puntos.
+
+Este flujo del juego se puede repetir tantas veces como se desee, ya que el servidor, mientras esté encendido, estará escuchando los mensajes de potenciales clientes, y de los ya conectados y activos.
 
 ### Descripción de tecnologías. ¿Cómo se hizo?
 Además, en cumplimiento con lo requerido en la práctica, el juego se desarrolló siguiendo la arquitectura **Cliente-Servidor** y **TCP/IP**, donde se estableció un **servidor** programado en el lenguaje C, y un **cliente** programado en el lenguaje Python, a los cuales se les asignaron los nombres de **TelePongServer.c** y **TelePongClient.py**, respectivamente.. Además, se partió del eje fundamental de los sockets, los cuales posibilitan la comunicación y el envío de mensajes entre el cliente y el servidor, y viceversa. Para ello, se hizo uso de la **API de sockets Berkeley en C**. y de la **librería socket en Python**.
@@ -50,7 +77,7 @@ Ahora, con relación al cliente, se hizo uso de la librería Pygame de Python, p
 ### Descripción del protocolo.
 Con relación al protocolo, cabe mencionar que se desarrolló con el fin posibilitar el bajo acoplamiento entre el cliente, el servidor y la librería de _sockets_. De esta forma, así como se tiene implementado, basta con que el cliente y el servidor importen o incluyan al protocolo en su lenguaje correspondiente, siendo así el protocolo en C **myPongProtocol.c** y el protocolo en Python **myPongProtocol.py**. Por lo tanto, el protocolo se definió basado en texto, de tal manera que la comunicación entre el cliente-protocolo y servidor-protocolo es a través de una cadena de texto que incluye la información necesaria para poder realizar determinada acción del lado del protocolo, usando los _sockets_. El protocolo recibe entonces la cadena que le envía el servidor o el cliente y realiza un parseo de la misma, con el fin de extraer la información necesaria e identificar cuál es la acción que posteriormente debe ejecutar. Con relación a los mensajes usados para la comunicación, se estableció que se utilizarían dos prefijos o palabras iniciales de reconocimiento, las cuales serían **PLAYER** y **SERVER**, y que de ahí en adelante se seguiría una jerarquía, siendo **PLAYER** y **SERVER** el nivel principal, el siguiente nivel correspondiendo a la instrucción propiamente, y finalmente teniendo los argumentos necesarios para la ejecución de tal comando. Así, pues, se tiene el siguiente conjunto de mensajes, los cuales son utilizados por el servidor y el cliente de la manera que a continuación se enuncia. 
 
-#### Mensajes usados por el servidor.
+#### Vocabulario de mensajes usado.
 Con relación al prefijo **PLAYER**:
 - PLAYER CREATE_SOCKET: Permite la creación del _socket_ del cliente, el cual será utilizado durante todo el juego para el envío y recepción de mensajes.
 - PLAYER CREATE <ins>_NICKNAME_</ins>: Permite la creación de un nuevo jugador, tomando como _nickname_ el mandado en el espacio correspondiente.
