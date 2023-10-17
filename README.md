@@ -97,8 +97,11 @@ Con relación al prefijo **SERVER**:
 - SERVER GAME_INFO <ins>_SOCKET_</ins> <ins>_PLAYER_NUM_</ins> <ins>_GAME_ID_</ins> <ins>_PLAYER_ADD_</ins>: Permite el envío de la información necesaria de la partida para poder jugar. Ahí se incluye el _socket_ del servidor (<ins>_SOCKET_</ins>) para poder enviar la información correspondiente, el número del jugador (<ins>_PLAYER_NUM_</ins>) y el id del juego o partida en la que se encuentra el jugador (<ins>_PLAYER_NUM_</ins>) a la dirección IP junto con el puerto (<ins>_PLAYER_ADD_</ins>) del jugador que la va a recibir.
 
 ## Conclusiones.
-
-
+A manera de conclusiones podemos destacar las siguientes:
+1. Consideramos este proyecto como una práctica bastante importante debido a los temas y elementos con los que aquí se trabajaron. Estos constituyen tópicos fundamentales en nuestra carrera como Ingenieros de Sistemas, no solo por la amplia aplicación de los mismos en múltiples áreas, sino también por el desarrollo de habilidades y manejo de los mismos a la hora de usarlos y aplicarlos en este proyecto.
+2. Consideramos este proyecto como una oportunidad para darnos cuenta de cuáles son algunos de los elementos que van detrás de arquitecturas como Cliente-Servidor, donde pudimos evidenciar las aplicaciones de otras arquitecturas como TCP/IP, y el uso de herramientas tan cruciales para estas arquitecturas, tales como los sockets, en el manejo de la comunicación entre cliente y servidor y viceversa.
+3. Consideramos que los sockets son elementos fundamentales en una amplia gama de desarrollos debido a su gran utilidad y su labor crucial para el posibilitamiento de una comunicación y envío de mensajes entre diferentes actores, sean servidores o clientes, o ambos. Además, dentro de este aspecto, consideramos que es muy valiosa la posibilidad que estos sockets brindan al ofrecer un socket específico según las necesidades puntuales del proyecto en cuestión; estos tipos son UDP y TCP, donde ambos poseen ventajas con relación al otro, y donde es de crucial importancia realizar un apropiado balance de las necesidades y requerimientos básicos del proyecto para decidir con relación a cuál usar.
+4. Consideramos que el uso de los hilos es demasiado importante en proyectos donde se requiere manejar apropiadamente la concurrencia de usuarios y peticiones de los mismos. Estos hilos posibilitan que el servidor pueda estar atendiendo y respondiendo a las diferentes _requests_ y mensajes que los clientes le envíen, y esto es crucial en momentos donde mensajes son enviadas al mismo tiempo. Así el servidor puede recibir el mensaje y delegar la respuesta del mismo a un hilo puntual. 
 
 ## Referencias. 
 
