@@ -106,4 +106,5 @@ A manera de conclusiones podemos destacar las siguientes:
 ## Referencias. 
 
 - GeeksforGeeks. (2021). How to create a text input box with PyGame. GeeksforGeeks. https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
-- GeeksforGeeks. (2022). TCP Server Client Implementation in C. GeeksforGeeks. https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/ 
+- GeeksforGeeks. (2022). TCP Server Client Implementation in C. GeeksforGeeks. https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
+- Greyrat, R. (2022, 5 julio). ¿Cómo dibujar un rectángulo con esquina redondeada en PyGame? – Barcelona Geeks. https://barcelonageeks.com/como-dibujar-un-rectangulo-con-esquina-redondeada-en-pygame/
