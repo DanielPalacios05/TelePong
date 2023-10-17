@@ -24,20 +24,21 @@ int createClientSocket()
     return client_socket;
 }
 
-int createServerSocket()
+int createServerSocket(char* port)
 {
     int server_socket = socket(AF_INET, SOCK_DGRAM, 0);
 
     if (server_socket == -1)
     {
         perror("Error al crear el socket");
+        exit(1);
     }
 
     // Configurar la dirección y el puerto en los que se escucharán los datagramas
     struct sockaddr_in server_address;
     memset(&server_address, 0, sizeof(server_address));
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(PORT);       // Puerto deseado
+    server_address.sin_port = htons(atoi(port));       // Puerto deseado
     server_address.sin_addr.s_addr = INADDR_ANY; // Escuchar en todas las interfaces
 
     // Vincular el socket a la dirección y puerto
@@ -45,24 +46,21 @@ int createServerSocket()
     {
         perror("Error al vincular el socket");
         close(server_socket);
+        exit(1);
     }
     return server_socket;
 }
 
-struct Player receivePlayer(int server_socket)
+struct Player receivePlayer(char* nickname,struct sockaddr_storage *client_address,socklen_t client_len)
 {
-    struct sockaddr_storage client_address;
-    socklen_t client_len = sizeof(client_address);
-    char read_data[BUFFER_SIZE];
 
-    int bytes_read = recvfrom(server_socket, read_data, sizeof(read_data), 0, (struct sockaddr *)&client_address, &client_len);
     struct Player player;
     // Copiar los valores de client_address y client_len en player.address y player.address_len
     memcpy(&player.address, &client_address, sizeof(client_address));
     player.address_len = client_len;
 
     // Copiar el nickname desde read_data a player.nickname
-    strncpy(player.nickname, read_data, sizeof(player.nickname) - 1);
+    strncpy(player.nickname, nickname, sizeof(player.nickname) - 1);
     player.nickname[sizeof(player.nickname) - 1] = '\0'; // Asegurarse de que la cadena esté terminada con '\0'
 
     // Asignar valores adecuados a player.playerNum y player.playerPos según tu lógica
@@ -70,7 +68,6 @@ struct Player receivePlayer(int server_socket)
     player.playerPos = 0; // Por ejemplo, aquí se inicializa en 0
     player.gameId = 0;
 
-    memset(read_data, 0, sizeof(read_data));
 
     return player;
 }
@@ -113,10 +110,6 @@ void sendMovement(char *move, int server_socket, struct sockaddr_storage address
 
 
 
-void receiveMsg(int socket, char *msg, size_t max_length)
-{
-    int bytes_read = recv(socket, msg, max_length , 0);
-}
 
 void sockaddrStorageToString(const struct sockaddr_storage *addr, char *buffer)
 {
@@ -145,8 +138,12 @@ char *socklen_tToCString(socklen_t *client_len)
     return len_str;
 }
 
-struct sockaddr_storage resolveAddress(char *token)
+struct sockaddr_storage resolveAddress(char *originalToken)
 {
+
+    char *token = strdup(originalToken);
+
+
 
     char *colon_position = strchr(token, ':');
     if (colon_position == NULL)
@@ -185,6 +182,7 @@ struct sockaddr_storage resolveAddress(char *token)
         fprintf(stderr, "La resolución de dirección falló.\n");
         // Aquí puedes manejar el error de resolución según sea necesario
     }
+    free(token);
     return address;
 }
 
@@ -214,19 +212,10 @@ struct Response handleCommunication(char *message)
         else if (strcmp(token, "RECEIVE") == 0)
         {
             //printf("Hemos recibido el RECEIVE\n");
-     token = strtok_r(tokenTemp, " ",&tokenTemp);
-            int socket = atoi(token);
-            struct Response response;
-            response.player = receivePlayer(socket);
-            //printf("Hemos recibido al jugador: %s\n", response.player.nickname);
-            sockaddrStorageToString(&response.player.address, response.address);
-            strncpy(response.player.addressText, response.address, sizeof(response.player.addressText));
-            //printf("Sin error !!\n");
+            printf("Sin error !!\n");
 
             //strncpy(response.client_len, socklen_tToCString(&response.player.address_len), sizeof(response.client_len));
             //strncpy(response.player.addressLenText, response.client_len, sizeof(response.player.addressLenText));
-
-            return response;
         }
         else if (strcmp(token, "SEND_OPP") == 0)
         {
@@ -256,7 +245,9 @@ struct Response handleCommunication(char *message)
      token = strtok_r(tokenTemp, " ",&tokenTemp);
             char move[50];
             strcpy(move, token);
+            
             struct Response response;
+
             response.gameId = gameId;
             response.playerNum = playerNum;
             strcpy(response.msg, move);
@@ -284,8 +275,9 @@ struct Response handleCommunication(char *message)
      token = strtok_r(tokenTemp, " ",&tokenTemp);
         if (strcmp(token, "CREATE_SOCKET") == 0)
         {
-            //printf("Hemos recibido el CREATE_SOCKET\n");
-            int socket = createServerSocket();
+            //CONSEGUIR PUERTO
+            token = strtok_r(tokenTemp, " ",&tokenTemp);
+            int socket = createServerSocket(token);
             struct Response response;
             response.server_socket = socket;
             return response;
@@ -311,17 +303,39 @@ struct Response handleCommunication(char *message)
 
             sendGameInfo(socket, playerNum, gameId, address, address_len);
         }
+        // will activate if SERVER INIT_PLAYER {NICKNAME} {IP:PORT STRING}
+        else if(strcmp(token, "INIT_PLAYER") == 0){
+
+            char* nickname = strtok_r(tokenTemp, " ",&tokenTemp);
+            char* address = strtok_r(tokenTemp, " ",&tokenTemp);
+
+            struct Response response;
+            struct sockaddr_storage newPlayerAddress = resolveAddress(address);
+            response.player = receivePlayer(nickname,&newPlayerAddress,sizeof(struct sockaddr_storage));
+            //printf("Hemos recibido al jugador: %s\n", response.player.nickname);
+            
+            strncpy(response.player.addressText, address, sizeof(response.player.addressText));
+
+
+            return response;
+
+
+
+            
+        }
         else if (strcmp(token, "LISTEN_MSG") == 0)
         {
 
      token = strtok_r(tokenTemp, " ",&tokenTemp);
             int socket = atoi(token);
             char msg[100];
-            receiveMsg(socket, msg, sizeof(msg));
             struct Response response;
-            strncpy(response.msg, msg, sizeof(msg));
-            printf("Mensaje recibido  %s \n", response.msg);
-            response.msg[sizeof(response.msg) - 1] = '\0';
+            response.player.address_len = sizeof(struct sockaddr_storage);
+
+            int bytes_read = recvfrom(socket, response.msg, sizeof(msg) , 0,(struct sockaddr *)&response.player.address,&response.player.address_len);
+            
+            sockaddrStorageToString(&response.player.address,response.address);
+
             return response;
         }
     }
