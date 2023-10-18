@@ -35,12 +35,10 @@ Partiendo de la base general de lo que significa y establece el juego clásico d
 ### Flujo del juego. ¿Cómo funciona?
 De tal forma, el flujo del juego es el siguiente:
 - El servidor, encendido, escucha constantemente por mensajes del cliente.
-- El cliente se inicia, y envía un mensaje de inicialización del juego.
+- El cliente se inicia, y envía un mensaje de inicialización del juego junto al Nick del jugador y demas informacion relevante.
 - El servidor recibe ese mensaje, y lo compara para verificar que sí sea un mensaje de inicialización, o es un mensaje durante la partida.
-  - En caso de que sea un mensaje de inicialización, el servidor se queda escuchando esperando que el jugador le envíe su _nickname_.
-  - El jugador le envía el _nickname_ al servidor.
-  - El servidor toma el _nickname_ y la dirección IP junto con el puerto del jugador, crea un jugador con esa información y lo agrega al arreglo de jugadores, y pasa a verificar en qué partida o sala puede ubicar a ese jugador.
-  - El servidor verifica, recorriendo cada sala cuál tiene espacio para este jugador. En este caso verifica dos tres cosas:
+  - Una vez se verifica que es un mensaje de inicialización el servidor toma el _nickname_ y la dirección IP junto con el puerto del jugador, crea un jugador con esa información, lo agrega al arreglo de jugadores y pasa a verificar en qué partida o sala puede ubicar a ese jugador.
+  - El servidor verifica, recorriendo cada sala, cuál tiene espacio para este jugador. En este caso verifica dos tres cosas:
     - Si la sala está vacía, entonces agrega ese jugador a esa sala siendo el jugador 1, y le asigna al jugador la información del id de esa sala y su número de jugador (1).
     - Si la sala tiene solo un jugador, entonces agrega ese jugador a esa sala siendo el jugador 2, y le asigna al jugador la información del id de esa sala y su número de jugador (2).
     - Si la sala está llena, es decir, tiene los dos jugadores, entonces pasa a verificar la siguiente sala, y así sucesivamente hasta que encuentre una sala donde pueda ingresar.
