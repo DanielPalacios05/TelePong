@@ -37,7 +37,7 @@ De tal forma, el flujo del juego es el siguiente:
 - El servidor, encendido, escucha constantemente por mensajes del cliente.
 - El cliente se inicia, y envía un mensaje de inicialización del juego.
 - El servidor recibe ese mensaje, y lo compara para verificar que sí sea un mensaje de inicialización, o es un mensaje durante la partida.
-  - Como sí resulta ser un mensaje de inicialización el servidor se queda escuchando esperando que el jugador le envíe su _nickname_.
+  - En caso de que sea un mensaje de inicialización, el servidor se queda escuchando esperando que el jugador le envíe su _nickname_.
   - El jugador le envía el _nickname_ al servidor.
   - El servidor toma el _nickname_ y la dirección IP junto con el puerto del jugador, crea un jugador con esa información y lo agrega al arreglo de jugadores, y pasa a verificar en qué partida o sala puede ubicar a ese jugador.
   - El servidor verifica, recorriendo cada sala cuál tiene espacio para este jugador. En este caso verifica dos tres cosas:
