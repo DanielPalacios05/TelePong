@@ -1,11 +1,14 @@
 import pygame
-import time
 import myPongProtocol
+import getInfoWindow
+import pickle
 import time
 import os
 
 # Get the directory where the script is located
 script_dir = os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+nickname, ipAddress, port = getInfoWindow.receiveInfo()
 
 pygame.init()
 
@@ -81,12 +84,9 @@ class Striker:
         return self.playerRect
     
     def reset(self):
-        if self.name == "Player 1":
-            self.posx = 20
-            self.posy = (HEIGHT//2)-70
-        elif self.name == "Player 2":
-            self.posx = WIDTH-40
-            self.posy = (HEIGHT//2)-70
+        self.posy = (HEIGHT//2)-70
+        
+            
 
 # Ball class
 
@@ -152,20 +152,19 @@ def main():
     running = True
     show = True
     movements = []
-
-    nickname = input()
     oppNickname = " "
-    
-    client_socket = myPongProtocol.createSocket()
+
+    client_socket = myPongProtocol.handleCommunication("PLAYER CREATE_SOCKET", None)
+
+    #myPongProtocol.sendMsg("SERVER INIT_PLAYER", client_socket)
 
     # Se debe pedir por pantalla la IP y PORT del server para almacenarlos
     #  y poder después hacer el envío de mensajes.
-    playerNumber, gameId = myPongProtocol.createPlayer(nickname, client_socket)
+
+    playerNumber, gameId = myPongProtocol.handleCommunication("PLAYER CREATE_PLAYER "+ ipAddress + " " + port + " " + nickname, client_socket)
     print(gameId)
     while len(oppNickname) == 1:
-        oppNickname = myPongProtocol.receiveOpponent(client_socket)
-    
-    print("opp",oppNickname)
+        oppNickname = myPongProtocol.handleCommunication("PLAYER RECEIVE_OPP", client_socket)
     
     # Defining the objects
     # Striker 
@@ -179,7 +178,7 @@ def main():
         # posx, posy, width, height, speed, color, name
     pygame.display.set_caption("TelePong Party - "+player1.name+" vs "+player2.name)
 
-    ball = Ball(WIDTH//2, HEIGHT//2, 10, 10, WHITE)
+    ball = Ball(WIDTH//2, HEIGHT//2, 10, 7, WHITE)
 
     listOfPlayers = [player1, player2]
 
@@ -230,10 +229,10 @@ def main():
             #player2YFac = 1
             movement = "DOWN"
         
-        msg = "PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+movement
+        msg = "PLAYER SEND_MOVE "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+movement
         print(msg)
         oponent = "NONE"
-        oponent = myPongProtocol.sendAndReceiveMovement(client_socket, msg)
+        oponent = myPongProtocol.handleCommunication(msg, client_socket)
         oponent = oponent.replace("\x00","")
 
         print("Oponente movió: "+oponent)
@@ -266,8 +265,13 @@ def main():
                 player1YFac = -1
             elif oponent == "DOWN":
                 player1YFac = 1
-            else:
+            elif oponent == "NONE":
                 player1YFac = 0
+            else:
+                if oponent == "jugador1":
+                    winner = player1
+                elif oponent == "jugador2":
+                    winner = player2
 
 
         # Collision detection
@@ -285,13 +289,18 @@ def main():
         # 0 -> None of them scored
         if point == -1:
             player1Score += 1
+
         elif point == 1:
             player2Score += 1
         
         if player1Score == 5:
+            msg = "PLAYER SEND_MOVE "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador1"
+            oponent = myPongProtocol.handleCommunication(msg, client_socket)
             winner = player1
             break
         if player2Score == 5:
+            msg = "PLAYER SEND_MOVE "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador2"
+            oponent = myPongProtocol.handleCommunication(msg, client_socket)
             winner = player2
             break
         
