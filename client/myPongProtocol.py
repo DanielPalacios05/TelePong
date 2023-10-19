@@ -3,19 +3,17 @@
 import socket
 
 
-#HOST = "127.0.0.1"  # The server's hostname or IP address
-HOST = "18.215.165.27"
+HOST = "54.221.21.98"  # The server's hostname or IP address
+#HOST = "120.0.0.1"
 PORT = 8081  # The port used by the server
 
 def createSocket():
     client_socket  = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    
-
     return client_socket
 
-def createPlayer(nickname, client_socket):
+def createPlayer(nickname, client_socket, server_ip, port):
     f_nickname = str.encode("SERVER INIT_PLAYER " + nickname + "\0")
-    client_socket.sendto(f_nickname,(HOST,PORT))
+    client_socket.sendto(f_nickname,(server_ip, int(port)))
 
     player_number_bytes, _ = client_socket.recvfrom(1)
     game_id_bytes, _ = client_socket.recvfrom(1)
@@ -35,10 +33,11 @@ def receiveOpponent(client_socket):
     opponent_nickname_bytes, _ = client_socket.recvfrom(15)
     opponent_nickname = opponent_nickname_bytes.decode('utf-8')
     opponent_nickname = opponent_nickname.replace("\0", "")
+    print(opponent_nickname)
 
     return opponent_nickname
 
-def sendAndReceiveMovement(client_socket, msg):
+def sendAndReceiveMovement(client_socket, msg, server_ip, port):
 
 
     client_socket.settimeout(2)
@@ -47,7 +46,7 @@ def sendAndReceiveMovement(client_socket, msg):
     #if movement != "NONE":
     print("Sent " + msg + " to the server")
     
-    client_socket.sendto(a,(HOST,PORT))
+    client_socket.sendto(a,(server_ip, int(port)))
 
     messageReceived = False
     while not messageReceived:
@@ -55,35 +54,36 @@ def sendAndReceiveMovement(client_socket, msg):
             opponent_move_bytes, _ = client_socket.recvfrom(4)
             messageReceived = True
         except TimeoutError:
-            client_socket.sendto(a,(HOST,PORT))
+            client_socket.sendto(a,(server_ip, int(port)))
 
 
     opponent_move = opponent_move_bytes.decode("utf-8")
     print("Received player move:"+ opponent_move)
     # Now you can use the player_number variable in your game logic
-    #if receivedmovement != "NONE":
-    #    print("Received " + receivedmovement + " from the server")
     return opponent_move
-
-#     return receiveddata
-
-# def sendMovement(client_socket, movement):
-#     a = str.encode(movement)
-#     client_socket.sendto(a, (HOST, PORT))
-
-#     # Wait for the server's response (acknowledgment)
-#     receivedBytes, server_address = client_socket.recvfrom(1024)
-#     receiveddata = receivedBytes.decode()
-
-#     return receiveddata
-
-# with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-
-#     while True:
-#        a = str.encode(input("say sum: "))
-#        s.sendto(a,(HOST,PORT))
-
-#        receivedBytes = s.recvfrom(1024)
-#        print(receivedBytes[0].decode())
         
-    
+
+def handleCommunication(message, client_socket):
+    seg_msg = message.split()
+    if seg_msg[0] == 'PLAYER':
+        if seg_msg[1] == 'CREATE_SOCKET':
+            client_socket = createSocket()
+            return client_socket
+        if seg_msg[1] == 'CREATE_PLAYER':
+            
+            server_ip = seg_msg[2]
+            port = seg_msg[3]
+            nickname = seg_msg[4]
+            playerNum, gameId = createPlayer(nickname, client_socket, server_ip, port)
+            return playerNum, gameId
+        if seg_msg[1] == 'RECEIVE_OPP':
+            
+            opp_nickname = receiveOpponent(client_socket)
+            return opp_nickname
+        if seg_msg[1] == 'SEND_MOVE':
+            
+            server_ip = seg_msg[2]
+            port = seg_msg[3]
+            msg = seg_msg[4] + " " + seg_msg[5] + " " + seg_msg[6] + " " + seg_msg[7] + " " + seg_msg[8]
+            opp_movement = sendAndReceiveMovement(client_socket, msg, server_ip, port)
+            return opp_movement

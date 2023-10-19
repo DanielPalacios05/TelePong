@@ -5,6 +5,7 @@ import pygame
 # imported module
 def receiveInfo(): 
     pygame.init() 
+    pygame.display.set_caption("Welcome to TelePong!")
     
     clock = pygame.time.Clock() 
 

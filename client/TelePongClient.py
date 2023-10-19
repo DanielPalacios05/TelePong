@@ -1,6 +1,7 @@
 import pygame
 import myPongProtocol
 import getInfoWindow
+import pickle
 import time
 import os
 
@@ -35,7 +36,7 @@ FPS = 30
 
 class Striker:
         # Take the initial position, dimensions, speed and color of the object
-    def __init__(self, posx, posy, width, height, speed, color, name, number):
+    def __init__(self, posx, posy, width, height, speed, color, name):
         self.posx = posx
         self.posy = posy
         self.width = width
@@ -43,7 +44,6 @@ class Striker:
         self.speed = speed
         self.color = color
         self.name = name
-        self.number = number
         # Rect that is used to control the position and collision of the object
         self.playerRect = pygame.Rect(posx, posy, width, height)
         # Object that is blit on the screen
@@ -84,12 +84,9 @@ class Striker:
         return self.playerRect
     
     def reset(self):
-        if self.number == 1:
-            self.posx = 20
-            self.posy = (HEIGHT//2)-70
-        elif self.number == 2:
-            self.posx = WIDTH-40
-            self.posy = (HEIGHT//2)-70
+        self.posy = (HEIGHT//2)-70
+        
+            
 
 # Ball class
 
@@ -151,40 +148,37 @@ class Ball:
 
 
 def main():
-
-
     
     running = True
     show = True
     movements = []
-
     oppNickname = " "
-    
-    client_socket = myPongProtocol.createSocket()
 
-    myPongProtocol.sendMsg("SERVER INIT_PLAYER", client_socket)
+    client_socket = myPongProtocol.handleCommunication("PLAYER CREATE_SOCKET", None)
+
+    #myPongProtocol.sendMsg("SERVER INIT_PLAYER", client_socket)
 
     # Se debe pedir por pantalla la IP y PORT del server para almacenarlos
     #  y poder después hacer el envío de mensajes.
 
-    playerNumber, gameId = myPongProtocol.createPlayer(nickname, client_socket)
+    playerNumber, gameId = myPongProtocol.handleCommunication("PLAYER CREATE_PLAYER "+ ipAddress + " " + port + " " + nickname, client_socket)
     print(gameId)
     while len(oppNickname) == 1:
-        oppNickname = myPongProtocol.receiveOpponent(client_socket)
+        oppNickname = myPongProtocol.handleCommunication("PLAYER RECEIVE_OPP", client_socket)
     
     # Defining the objects
     # Striker 
     if playerNumber == 1:
-        player1 = Striker(10, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname, 1)
-        player2 = Striker(WIDTH-20, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname, 2)
+        player1 = Striker(10, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
+        player2 = Striker(WIDTH-20, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
         # posx, posy, width, height, speed, color, name
     elif playerNumber == 2:
-        player1 = Striker(10, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname, 1)
-        player2 = Striker(WIDTH-20, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname, 2)
+        player1 = Striker(10, (HEIGHT//2)-70, 15, 110, 10, WHITE, oppNickname)
+        player2 = Striker(WIDTH-20, (HEIGHT//2)-70, 15, 110, 10, WHITE, nickname)
         # posx, posy, width, height, speed, color, name
     pygame.display.set_caption("TelePong Party - "+player1.name+" vs "+player2.name)
 
-    ball = Ball(WIDTH//2, HEIGHT//2, 10, 1, WHITE)
+    ball = Ball(WIDTH//2, HEIGHT//2, 10, 7, WHITE)
 
     listOfPlayers = [player1, player2]
 
@@ -235,10 +229,10 @@ def main():
             #player2YFac = 1
             movement = "DOWN"
         
-        msg = "PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+movement
+        msg = "PLAYER SEND_MOVE "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+movement
         print(msg)
         oponent = "NONE"
-        oponent = myPongProtocol.sendAndReceiveMovement(client_socket, msg)
+        oponent = myPongProtocol.handleCommunication(msg, client_socket)
         oponent = oponent.replace("\x00","")
 
         print("Oponente movió: "+oponent)
