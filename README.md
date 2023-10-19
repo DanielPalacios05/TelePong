@@ -77,7 +77,8 @@ De tal forma, el flujo del juego es el siguiente:
 Este flujo del juego se puede repetir tantas veces como se desee, ya que el servidor, mientras esté encendido, estará escuchando los mensajes de potenciales clientes, y de los ya conectados y activos.
 
 ### Diagrama ilustrativo del flujo del juego
-![DiagramaFlujoTelePong drawio](https://github.com/EsteTruji/TelePong/assets/94024545/8e133d32-e87e-4623-9372-7eab71757e47
+![DiagramaFlujoTelePong drawio](https://github.com/EsteTruji/TelePong/assets/94024545/06cb273e-2bd9-44c9-9a2b-c17a773328b8)
+
 
 ### Descripción de tecnologías. ¿Cómo se hizo?
 Además, en cumplimiento con lo requerido en la práctica, el juego se desarrolló siguiendo la arquitectura **Cliente-Servidor** y **TCP/IP**, donde se estableció un **servidor** programado en el lenguaje C, y un **cliente** programado en el lenguaje Python, a los cuales se les asignaron los nombres de **TelePongServer.c** y **TelePongClient.py**, respectivamente.. Además, se partió del eje fundamental de los sockets, los cuales posibilitan la comunicación y el envío de mensajes entre el cliente y el servidor, y viceversa. Para ello, se hizo uso de la **API de sockets Berkeley en C**. y de la **librería socket en Python**.
