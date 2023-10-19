@@ -3,11 +3,14 @@
 ### Tabla de contenidos.
 - [Introducción.](#introduccion)
 - [Desarrollo.](#desarrollo)
+  - [Requerimientos previos.](#requerimientos-previos)
+  - [Acciones iniciales.](https://github.com/EsteTruji/TelePong/edit/dev/README.md#acciones-iniciales-qu%C3%A9-debo-hacer-para-jugar)
   - [Descripción de aspectos generales.](#descripci%C3%B3n-de-aspectos-generales-qu%C3%A9-se-hizo)
   - [Descripción de aspectos personalizados/ajustados.](#descripci%C3%B3n-de-aspectos-personalizadosajustados-qu%C3%A9-funcionalides-tiene)
   - [Flujo del juego.](#flujo-del-juego-c%C3%B3mo-funciona)
   - [Descripción de tecnologías.](#descripci%C3%B3n-de-tecnolog%C3%ADas-c%C3%B3mo-se-hizo)
   - [Descripción del protocolo.](#descripci%C3%B3n-del-protocolo)
+    - [Vocabulario de mensajes usado.](#vocabulario-de-mensajes-usado)
 - [Conclusiones.](#conclusiones)
 - [Referencias.](#referencias)
 
@@ -22,13 +25,25 @@ Finalmente, se brindarán algunas conclusiones acerca del trabajo realizado, de 
 <a name="desarrollo"></a>
 ## Desarrollo.
 
+### Requerimientos previos.
+Para poder ejecutar y jugar sin problema a TelePong, es necesario que el dispositivo (computador) donde se va a ejecutar cumpla con los siguientes requerimientos:
+- **Sistema Operativo (o WSL en su defecto):** Linux.
+- **Lenguaje:** C, y su compilador respectivo instalados - Python.
+- **Librerías:** Requiere de la instalación previa de **Pygame** (pip install pygame).
+- **Acceso a Internet:** Requiere de un computador con acceso a Internet.
+- **Editor de código:** Preferiblemente, tener instalado Visual Studio Code.
+
+### Acciones iniciales. ¿Qué debo hacer para jugar?
+Una vez se cumplan todos los requerimientos previamente indicados, a cada usuario que desee jugar a TelePong, se le compartirá una carpeta comprimida con los archivos correspondientes al cliente. Estos son TelePongClient.py, myPongProtocol.py, y getInfoWindow.py. El archivo myPongProtocol.py corresponde al responsable de la comunicación a través de sockets entre el cliente y el servidor desplegado. El archivo getInfoWindow.py corresponde a un módulo de la aplicación que se encarga de desplegar una ventana donde se da la bienvenida al juego, y se reciben de parte del usuario la información mínima necesaria para jugar, es decir su _nickname_, la _dirección IP del servidor_, y el _puerto del servidor_. Finalmente, el archivo TelePongClient.py corresponde al archivo de cliente que debe ser ejecutado por el usuario, ya que acá se encuentra el juego como tal. Para ejecutar ese archivo, primero debe descomprimir la carpeta .zip recibida, después abrir dicha carpeta en el editor de código (Visual Studio Code), y ejecutar por la consola el siguiente comando: ```python3 TelePongClient.py```. De esta forma, se abrirá inmediatamente después la ventana donde se dará la bienvenido y se pedirá la información previamente mencionada.
+
+
 ### Descripción de aspectos generales. ¿Qué se hizo?
 El trabajo realizado consiste en el desarrollo de un juego de _Pong_, el cual nombramos para efectos de la práctica como _TelePong_. El juego de Pong tiene como fin conseguir la mayor cantidad de puntos en un determinado tiempo, o conseguir primero determinada cantidad de puntos. Para este propósito, es necesario procurar que el oponente realice la menor cantidad de puntos evitando que la pelota entre a la _"portería"_ propia usando la raqueta asignada, de tal forma que rebote en ella y se dirija a la portería del oponente para realizar punto. Con relación al movimiento de las raquetas, se tiene que este es solo de manera vertical (arriba o abajo), y con el fin de generar tal movimiento se tiene establecido el uso de las teclas arriba y abajo del teclado (flecha arriba y flecha abajo).
 
 ### Descripción de aspectos personalizados/ajustados. ¿Qué funcionalides tiene?
 Partiendo de la base general de lo que significa y establece el juego clásico de _Pong_, se realizaron determinados ajustes y cambios personalizados, de tal manera que el juego pueda ser distinguido y cumpla además con los requerimientos adicionales de este proyecto. Tales aspectos son los siguientes:
 
-- El juego requiere de forma inicial, antes de empezar a jugar, tres elementos fundamentales, de los cuales los dos últimos serán brindados oportunamente a los usuarios. Dichos elementos son el **_nickname_ del usuario** que se desea conectar (con el cual será identificado en toda la partida), la **dirección IP del servidor** (para poder conectarse a este), y el **puerto en el cual estará escuchando el servidor**. Estos dos últimos elementos componen el _socket_ del servidor, y serán usados precisamente para saber dónde debe enviar los mensajes correspondientes.
+- El juego requiere de forma inicial, antes de empezar a jugar, tres elementos fundamentales (tal y como se indicó en la sección de [Acciones iniciales](https://github.com/EsteTruji/TelePong/edit/dev/README.md#acciones-iniciales-qu%C3%A9-debo-hacer-para-jugar)), de los cuales los dos últimos serán brindados oportunamente a los usuarios. Esta información debe ser escrita en la ventana de bienvenida de TelePong, donde habrán tres espacios destinados para ellos respectivamente. Dichos elementos son el **_nickname_ del usuario** que se desea conectar (con el cual será identificado en toda la partida), la **dirección IP del servidor** (para poder conectarse a este), y el **puerto en el cual estará escuchando el servidor**. Estos dos últimos elementos componen el _socket_ del servidor, y serán usados precisamente para saber dónde debe enviar los mensajes correspondientes.
 - Con el fin de aumentar la dificultad del juego a medida que pasa el tiempo desde que se inició la partida, se va aumentando gradualmente la velocidad de la pelota, de tal forma que será más difícil interceptarla y evitar que el oponente haga puntos.
 - Con el fin posibilitar la conexión de múltiples clientes de forma simultánea en el juego, y para permitir que el servidor sea capaz de atender de manera oportuna las solicitudes y mensajes de los clientes conectados, se implementaron los hilos, basándose en el concepto de _multi-threading_. Así, el juego es capaz de soportar a varios jugadores al mismo tiempo, con el propósito de brindar un servicio que pueda ser accedido por múltiples usuarios simultáneamente.
 
