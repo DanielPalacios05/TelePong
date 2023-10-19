@@ -29,7 +29,7 @@ Finalmente, se brindarán algunas conclusiones acerca del trabajo realizado, de 
 Para poder ejecutar y jugar sin problema a TelePong, es necesario que el dispositivo (computador) donde se va a ejecutar cumpla con los siguientes requerimientos:
 - **Sistema Operativo (o WSL en su defecto):** Linux.
 - **Lenguaje:** C, y su compilador respectivo instalados - Python.
-- **Librerías:** Requiere de la instalación previa de **Pygame** (pip install pygame).
+- **Librerías:** Requiere de la instalación previa de **Pygame** (```pip install pygame```).
 - **Acceso a Internet:** Requiere de un computador con acceso a Internet.
 - **Editor de código:** Preferiblemente, tener instalado Visual Studio Code.
 
