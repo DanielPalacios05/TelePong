@@ -69,7 +69,9 @@ De tal forma, el flujo del juego es el siguiente:
     - En este caso, la respuesta será enviarle ese movimiento que recibió al oponente del jugador que envió el mensaje.
     - Como cada cliente estaba esperando el movimiento de su oponente, y ya cada uno lo envió a quien correspondía, ambos lo reciben y reflejan su movimiento y el del oponente en el juego.
     - Así se hará con cada movimiento que realicen los clientes durante todo el juego.
-    - Finalmente, el juego terminará cuando alguno de los dos clientes de la partida específica alcance primero los cinco puntos.
+    - Finalmente, Una vez el cliente identefique que alguno de los 2 jugadores ha llegado a los cinco puntos, este enviara un mensaje al servidor anunciando el ganador.
+    - El servidor procedera a enviar este mensaje al oponente y una vez este confirme la recepcion de este ultimo mensaje se procedera a terminar el juego.
+    - Para terminar el juego simplemente se cambiara la vista del cliente y se le mostrara a ambos jugadores el nombre del ganador de la partida.
 
 Este flujo del juego se puede repetir tantas veces como se desee, ya que el servidor, mientras esté encendido, estará escuchando los mensajes de potenciales clientes, y de los ya conectados y activos.
 
