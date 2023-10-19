@@ -300,18 +300,18 @@ def main():
         elif point == 1:
             player2Score += 1
         
-        if player1Score == 1:
+        if player1Score == 5:
             msg = "PLAYER SEND_WIN "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador1"
             oponent = myPongProtocol.handleCommunication(msg, client_socket)
             winner = player1
             break
-        if player2Score == 1:
+        if player2Score == 5:
             msg = "PLAYER SEND_WIN "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador2"
             oponent = myPongProtocol.handleCommunication(msg, client_socket)
             winner = player2
             break
         
-        ball.speed += 0.002
+        ball.speed += 0.02
         #print(ball.speed)
 
         # Someone has scored a point and the ball is out of bounds.
