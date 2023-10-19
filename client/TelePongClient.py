@@ -244,7 +244,7 @@ def main():
                 player1YFac = -1
             elif movement == "DOWN":
                 player1YFac = 1
-            else:
+            elif movement == "NONE":
                 player1YFac = 0
                 
             if oponent == "UP":
@@ -267,11 +267,18 @@ def main():
                 player1YFac = 1
             elif oponent == "NONE":
                 player1YFac = 0
-            else:
-                if oponent == "jugador1":
-                    winner = player1
-                elif oponent == "jugador2":
-                    winner = player2
+
+        if oponent == "jugador1":
+            winner = player1
+            msg = "PLAYER SEND_CONF "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador1"
+            oponent = myPongProtocol.handleCommunication(msg, client_socket)
+            winner = player1
+            break
+        elif oponent == "jugador2":
+            winner = player2
+            msg = "PLAYER SEND_CONF "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador2"
+            oponent = myPongProtocol.handleCommunication(msg, client_socket)
+            winner = player2
 
 
         # Collision detection
@@ -293,13 +300,13 @@ def main():
         elif point == 1:
             player2Score += 1
         
-        if player1Score == 5:
-            msg = "PLAYER SEND_MOVE "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador1"
+        if player1Score == 1:
+            msg = "PLAYER SEND_WIN "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador1"
             oponent = myPongProtocol.handleCommunication(msg, client_socket)
             winner = player1
             break
-        if player2Score == 5:
-            msg = "PLAYER SEND_MOVE "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador2"
+        if player2Score == 1:
+            msg = "PLAYER SEND_WIN "+ ipAddress + " " + port + " PLAYER MOVE "+str(gameId)+" "+str(playerNumber)+" "+"jugador2"
             oponent = myPongProtocol.handleCommunication(msg, client_socket)
             winner = player2
             break

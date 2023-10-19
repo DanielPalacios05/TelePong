@@ -61,7 +61,47 @@ def sendAndReceiveMovement(client_socket, msg, server_ip, port):
     print("Received player move:"+ opponent_move)
     # Now you can use the player_number variable in your game logic
     return opponent_move
-        
+
+def sendWin(client_socket, msg, server_ip, port):
+
+
+    client_socket.settimeout(1)
+
+    a = str.encode(msg+ "\0")
+    #if movement != "NONE":
+    print("Sent " + msg + " to the server")
+    
+    client_socket.sendto(a,(server_ip, int(port)))
+
+    messageReceived = False
+    tries,maxtries = 0,2
+    while not messageReceived and tries < maxtries:
+        try:
+            opponent_move_bytes, _ = client_socket.recvfrom(4)
+            messageReceived = True
+        except TimeoutError:
+            client_socket.sendto(a,(server_ip, int(port)))
+            tries+=1
+
+    if tries == maxtries:
+        return "NONE"
+
+
+    opponent_move = opponent_move_bytes.decode("utf-8")
+    print("Received player move:"+ opponent_move)
+    # Now you can use the player_number variable in your game logic
+    return opponent_move
+
+def sendMovement(client_socket, msg, server_ip, port):
+
+
+    client_socket.settimeout(2)
+
+    a = str.encode(msg+ "\0")
+    #if movement != "NONE":
+    print("Sent " + msg + " to the server")
+    client_socket.sendto(a,(server_ip, int(port)))
+    # Now you can use the player_number variable in your game logic        
 
 def handleCommunication(message, client_socket):
     seg_msg = message.split()
@@ -87,3 +127,18 @@ def handleCommunication(message, client_socket):
             msg = seg_msg[4] + " " + seg_msg[5] + " " + seg_msg[6] + " " + seg_msg[7] + " " + seg_msg[8]
             opp_movement = sendAndReceiveMovement(client_socket, msg, server_ip, port)
             return opp_movement
+        
+        if seg_msg[1] == 'SEND_WIN':
+            
+            server_ip = seg_msg[2]
+            port = seg_msg[3]
+            msg = seg_msg[4] + " " + seg_msg[5] + " " + seg_msg[6] + " " + seg_msg[7] + " " + seg_msg[8]
+            opp_movement = sendWin(client_socket, msg, server_ip, port)
+            return opp_movement
+        
+        if seg_msg[1] == 'SEND_CONF':
+            
+            server_ip = seg_msg[2]
+            port = seg_msg[3]
+            msg = seg_msg[4] + " " + seg_msg[5] + " " + seg_msg[6] + " " + seg_msg[7] + " " + seg_msg[8]
+            opp_movement = sendMovement(client_socket, msg, server_ip, port)
