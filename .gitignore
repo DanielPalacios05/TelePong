@@ -1,6 +1,6 @@
 # Prerequisites
 *.d
-
+.vscode/
 # Object files
 *.o
 *.ko
@@ -58,6 +58,8 @@ __pycache__/
 
 # C extensions
 *.so
+
+launch.json
 
 # Distribution / packaging
 .Python
